@@ -41,8 +41,8 @@ package body Temperature.Display is
       Value : constant UInt32 := UInt32 (T);
       Temperature_String : constant String := Value'Img & " C";
    begin
-      LCD_Std_Out.Put (0, 0, "T_MCU");
-      LCD_Std_Out.Put (0, 30, Temperature_String);
+      LCD_Std_Out.Put (40, 10, "T_MCU");
+      LCD_Std_Out.Put (32, 60, Temperature_String);
    end Put;
 
 end Temperature.Display;
