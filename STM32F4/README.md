@@ -18,8 +18,6 @@ The examples make use of the [Ada Drivers Library](https://github.com/AdaCore/Ad
 
 ## Content
 
-* **common** - Common definitions and code. Reproduced from the Ada Drivers Library `examples` directory.
-
 * **Temperature** - Read the temperature sensor in the STM32F4 MCU and display the value in degrees Celsius.
 
 ## License
@@ -32,39 +30,24 @@ All the contents of this site is provided in the hope that it will be useful, bu
 
 ### Install the GNAT GPL for Bare Board ARM compilation chain
 
-The compilation system can be dowlodaded from the [AdaCore Community site](https://www.adacore.com/community). The version used in the following is *ARM ELF (hosted on Linux) - 2017*. If you have been using previous versions of GNAT GPL you should take into account that some directories are now located at different places in the directory tree.
+The compilation system can be dowloaded from the [AdaCore Community site](https://www.adacore.com/community). The version used in the following is *GNAT Community 2018 ARM-ELF*. If you have been using previous versions of GNAT GPL you should take into account that some directories are now located at different places in the directory tree. You will also need to install a native GNAT compiler for your host platform. The following host platforms have been used by the developers:
+
+* Linux Ubuntu 16.04
+* MacOS 10.13 High Sierra
+* Windows 10
 
 Follow the installation instructions to setup the compiler. Let `<GNAT>` denote the installation root for the  GNAT compilation system. 
 The directory `<GNAT>/bin` must be in the execution `PATH` for the compilation tools to be run.
 
-#### Support for 32-bit architecture
-The GNAT ARM-ELF compilation tools run on a linux 32 bit i386 architecture. If your linux distribution is for 64 bit x86, you have to enable i386 support before using the tools:
-
-```
-sudo dpkg --add-architecture i386
-sudo apt-get update
-sudo apt-get install libbz2-1.0:i386 libncurses5:i386 libxinerama1:i386 \\
-                    libxrender1:i386 libsm6:i386
-```
-
 #### ST-LINK support
 
-If you have a board with ST-LINK support for debugging, such as the STM32F429 discovery boards, you also need to download and build the stlink software.
-
-```
-git clone https://github.com/texane/stlink stlink
-cd stlink
-make release
-cd build/Release
-sudo make install
-sudo ldconfig /usr/local/lib
-# restart the udev service
-sudo udevadm control --reload-rules
-```
+If you have a board with ST-LINK support for debugging, such as the STM32F429 discovery boards, you may need to install the st-flash and st-util tools. 
+See the
+[GNAT User’s Guide Supplement for Cross Platforms](http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx.html) for the details.
 
 ### Compile, upload and run a simple example
 
-Follow the steps in the [ARM-ELF Topics and Tutorial](https://docs.adacore.com/gnat_ugx-docs/html/gnat_ugx/gnat_ugx/arm-elf_topics_and_tutorial.html) document to open the `led_flasher-stm32f4` example in `<GNAT>/share/examples/gnat-cross/led_flasher-stm32f4`. Compile and build the program, and upload the executable code to the STM32F429 board. 
+Follow the steps in the [ARM-ELF Topics and Tutorial](http://docs.adacore.com/live/wave/gnat_ugx/html/gnat_ugx/gnat_ugx/arm-elf_topics_and_tutorial.html) document to open the `led_flasher-stm32f4` example in `<GNAT>/share/examples/gnat-cross/led_flasher-stm32f4`. Compile and build the program, and upload the executable code to the STM32F429 board. 
 
 ### Other examples
 
