@@ -14,5 +14,8 @@ This repository contains examples of software for embedded systems written in Ad
 
 You will need a GNAT cross compiler for the board you are using. Free compilers can be downloaded from the [AdaCore Community site](https://www.adacore.com/community).
 
-The examples have been compiled and tested on an Ubuntu 16.04 x86 host. See the specific folders to read more about setting up the programming environment for different target platforms.
+The examples have been compiled and tested on an Ubuntu 16.04 x86 host. MacOS and Windows host can also be used.
+
+See the specific folders to read more about setting up the programming environment for different target platforms.
+
 
