@@ -8,7 +8,7 @@ This repository uses submodules. To clone it, you need to use the --recursive gi
 $ git clone --recursive https://github.com/STR-UPM/Embedded_Ada_Examples.git
 ```
 
-## Contents
+### Contents
 
 This repository contains examples of software for embedded systems written in Ada. Examples are available for STM32F4 and RaspberryPi boards.
 
