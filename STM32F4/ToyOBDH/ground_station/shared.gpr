@@ -1,0 +1,19 @@
+
+-- Shared project definitions
+
+project Shared is
+
+   for Source_Dirs use ("shared/src");
+   for Object_Dir use "obj";
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+      for Default_Switches ("ada") use ("-g", "-gnat12");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-gnata", "-gnat12");
+   end Compiler;
+
+end Shared;
+

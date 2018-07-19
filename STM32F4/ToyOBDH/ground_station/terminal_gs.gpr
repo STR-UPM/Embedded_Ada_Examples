@@ -1,0 +1,24 @@
+
+--  Project file for the terminal-based version of the toy ground station
+
+with "shared.gpr";
+
+project Terminal_GS is
+
+   for Source_Dirs use ("terminal/src");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Main use ("gs.adb", "test_temperature.adb");
+
+
+   package Builder is
+      for Global_Configuration_Pragmas use "gnat.adc";
+      for Default_Switches ("ada") use ("-g", "-gnat12");
+   end Builder;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-gnat12", "-gnata");
+   end Compiler;
+
+end Terminal_GS;
+
