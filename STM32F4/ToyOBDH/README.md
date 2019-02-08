@@ -1,6 +1,6 @@
 # ToyOBDH
 
-Tiny mockup of a satellite OBDH system running on a Raspberry Pi. This
+Tiny mockup of a satellite OBDH system running on an STM32F429 board. This
 system must be used in conjunction with a *tiny ground station*, preferrably
 running on a different computer (e.g. a laptop computer). Both computers
 communicate through sockets on an internet connection.
