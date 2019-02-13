@@ -15,24 +15,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Houskeeping telemetry.
---  This package contais a task that sends a TM message to the ground station
---  with the last temperature value every 10 s.
+-- String images of TTC messages
 
-with System;
+package TTC_Data.Strings is
 
-package Basic_TM is -- cyclic
-   pragma Elaborate_Body;
+   function Image (M : TM_Message) return String;
 
-   Period      : Natural    := 10_000; -- ms
-   Deadline    : Natural    :=     50; -- ms
-   WCET        : Natural;              -- TBC after WCET analysis
-   Start_Delay : Natural    := 10_000; -- ms
-
-private
-
-   task Basic_TM_Task
-     with Priority => System.Default_Priority;
-   --  replace with DMS priority when available
-
-end Basic_TM;
+end TTC_Data.Strings;

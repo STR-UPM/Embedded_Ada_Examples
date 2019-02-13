@@ -20,6 +20,8 @@ with TTC_Data;           use TTC_Data;
 with HK_Data;            use HK_Data;
 with Storage;
 
+with HK_TM; -- quitar
+
 with Ada.Real_Time;      use Ada.Real_Time;
 
 package body Basic_TM is -- cyclic
@@ -37,10 +39,17 @@ package body Basic_TM is -- cyclic
 
    task body Basic_TM_Task is
       Next_Time : Time :=  Clock + Milliseconds (Start_Delay);
+      Count : Natural := 0; -- quitar
    begin
       loop
          delay until Next_Time;
-         Send_TM_Message;
+         -- quitar --
+         Count := (Count + 1) mod 5;
+         if Count = 0 then
+            HK_TM.Send;
+         else
+            Send_TM_Message;
+         end if;
          Next_Time := Next_Time + Milliseconds (Period);
       end loop;
    end Basic_TM_Task;

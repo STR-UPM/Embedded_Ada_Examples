@@ -34,7 +34,7 @@
 with TM_Receiver;
 -- TheTM_Receiver package contains the telemetry reception subsystem
 
-with TC_Sender;
+--with TC_Sender;
 -- The GS_TC package contains the telecommand transmission subsystem
 
 with User_Interface;              use User_Interface;
@@ -44,17 +44,17 @@ pragma Warnings(Off);
 with System.IO;        -- for debugging purposes
 pragma Warnings(On);
 
-procedure GS is
+procedure GS_Graphic is
 begin
    pragma Debug(System.IO.Put_Line("--- GS start ---"));
 
    -- initialize components
    TM_Receiver.Init;
-   TC_Sender.Init;
+   --TC_Sender.Init;
    User_Interface.Init;
 
    -- control returns here if the GUi window is closed
    pragma Debug(System.IO.Put_Line("--- GS end ---"));
 
-end GS;
+end GS_Graphic;
 

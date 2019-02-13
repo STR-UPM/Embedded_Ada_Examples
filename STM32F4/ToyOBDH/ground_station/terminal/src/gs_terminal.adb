@@ -42,7 +42,7 @@ with User_Interface;
 
 with System;
 
-procedure GS is
+procedure GS_Terminal is
    pragma Priority (System.Priority'Last);
 begin
    -- initialize components
@@ -53,5 +53,5 @@ begin
       null;
    end loop;
 
-end GS;
+end GS_Terminal;
 

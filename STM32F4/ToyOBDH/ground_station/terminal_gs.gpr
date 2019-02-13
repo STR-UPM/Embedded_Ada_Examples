@@ -8,7 +8,7 @@ project Terminal_GS is
    for Source_Dirs use ("terminal/src");
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   for Main use ("gs.adb", "test_temperature.adb");
+   for Main use ("gs_terminal.adb");
 
 
    package Builder is
@@ -21,4 +21,3 @@ project Terminal_GS is
    end Compiler;
 
 end Terminal_GS;
-

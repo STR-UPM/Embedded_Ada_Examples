@@ -45,11 +45,8 @@ with Gtk.Scrolled_Window; use Gtk.Scrolled_Window;
 with Gtk.Widget;          use Gtk.Widget;
 with Pango.Font;          use Pango.Font;
 
-with TC_Sender;
-
-pragma Warnings(Off);
-with System.IO;
-pragma Warnings(On);
+--with TC_Sender;
+with TTC_Data.Strings;
 
 package body User_Interface is
 
@@ -79,7 +76,8 @@ package body User_Interface is
    -- send a TC message
    procedure button_clicked(Self : access Gtk_Button_Record'Class) is
    begin
-      TC_Sender.Send;
+      null;
+      --TC_Sender.Send;
    end button_clicked;
 
    ----------
@@ -112,7 +110,8 @@ package body User_Interface is
       Gtk_New(Text_Buffer);
       Gtk_New(Text, Text_Buffer);
       Text.Set_Editable(False);
-      Text.Modify_Font(From_String("Menlo 14"));
+      Text.Modify_Font(From_String("Monospace 10"));
+--      Text.Modify_Font(From_String("Menlo 12"));
 
       Gtk_New(Scrolled);
       Scrolled.Set_Policy(Policy_Automatic, Policy_Automatic);
@@ -139,17 +138,26 @@ package body User_Interface is
       Gdk.Threads.Leave;
    end Init;
 
-   ------------
-   -- Put_TM --
-   ------------
+   ---------
+   -- Put --
+   ---------
 
-   procedure Put_TM (Message : String) is
+   procedure Put (S : String) is
    begin
       Gdk.Threads.Enter;
-      Text_Buffer.Insert_At_Cursor(" " & Message & ASCII.LF);
+      Text_Buffer.Insert_At_Cursor(" " & S & ASCII.LF);
       Text.Scroll_Mark_Onscreen(Text_Buffer.Get_Insert);
       Text.Show;
       Gdk.Threads.Leave;
-   end Put_TM;
+   end Put;
+
+   ---------
+   -- Put --
+   ---------
+
+   procedure Put (M : TM_Message) is
+   begin
+      Put (TTC_Data.Strings.Image (M));
+   end Put;
 
 end User_Interface;

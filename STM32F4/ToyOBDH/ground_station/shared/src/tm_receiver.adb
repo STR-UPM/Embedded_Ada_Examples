@@ -37,16 +37,8 @@ with User_Interface;
 with GNAT.IO;                    use GNAT.IO;
 with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 
---  with Ada.Real_Time;              use Ada.Real_Time;
---  with Ada.Calendar;               use Ada.Calendar;
---  with GNAT.Calendar.Time_IO;      use GNAT.Calendar.Time_IO;
-
 with Ada.IO_Exceptions;
 with Ada.Exceptions; use Ada.Exceptions;
-
-pragma Warnings(Off);
-with System.IO;
-pragma Warnings(On);
 
 package body TM_Receiver is
 
@@ -73,12 +65,12 @@ package body TM_Receiver is
    task body TM_Receiver_Task is
    begin
       COM.Open (USB);
-      COM.Set (Rate => B115200, Block => False);
+      COM.Set (Rate => B115200, Block => True);
 
       loop
          receive:
          begin
-            delay 5.0; -- let USART interface recover
+            --delay 5.0; -- let USART interface recover
 
             declare
                Message : TM_Message := TM_Message'Input (COM'Access);
@@ -87,7 +79,7 @@ package body TM_Receiver is
             end;
          exception
             when E : others =>
-               User_Interface.Put (Exception_Information (E));
+               User_Interface.Put ("TM receiver: " & Exception_Name (E));
          end receive;
       end loop;
 

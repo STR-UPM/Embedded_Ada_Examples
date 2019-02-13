@@ -32,49 +32,20 @@
 -- User interface implementation
 -- Terminal version
 
+with Ada.Text_IO; use Ada.Text_IO;
+
 --  with TC_Sender;               use TC_Sender;
 
-with Ada.Text_IO;             use Ada.Text_IO;
-with Ada.Characters.Handling; use Ada.Characters.Handling;
-with Ada.Calendar;            use Ada.Calendar;
-with GNAT.Calendar.Time_IO;   use GNAT.Calendar.Time_IO;
-with GNAT.Formatted_String;   use GNAT.Formatted_String;
+with TTC_Data.Strings;
 
-with System;
+-- with System;
 
 package body User_Interface is
-
-   package Mission_Time_IO is
-     new Modular_IO (Mission_Time);
-
-   function Mission_Time_Format is
-     new Mod_Format (Mission_Time, Mission_Time_IO.Put);
-
-   package Sensor_Reading_IO is
-     new Modular_IO (Sensor_Reading);
-
-   function Sensor_Reading_Format is
-     new Mod_Format (Sensor_Reading, Sensor_Reading_IO.Put);
-
-   package Temperature_Range_IO is
-      new Float_IO (Temperature_Range);
-
-   function Temperature_Range_Format is
-      new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
-
 
 --     task Command_Listener
 --       with Priority => System.Default_Priority;
 --     -- waits for the user to type a 'C' .and then
 --     -- generates a TC and send it to the OBSW
-
-   --------------------------
-   -- Image subprograms --
-   --------------------------
-
-   function Image (T : Mission_Time)      return String;
-   function Image (S : Sensor_Reading)    return String;
-   function Image (T : Temperature_Range) return String;
 
    ----------
    -- Init --
@@ -101,55 +72,8 @@ package body User_Interface is
 
    procedure Put (M : TM_Message) is
    begin
-      case M.Kind is
-         when Basic =>
-            Ada.Text_IO.Put (Image(Clock, "%T"));
-            Ada.Text_IO.Put (Image(M.Timestamp));
-            Ada.Text_IO.Put (Image(M.Data.Timestamp));
-            Ada.Text_IO.Put (Image(M.Data.Value));
-            Ada.Text_IO.Put (Image(Temperature(M.Data.Value)));
-            New_Line;
-
-         when Housekeeping =>
-            null;
-            --                    Split(Message.Timestamp, SC, TS);
-            --  --                    pragma Debug
-            --  --                      (System.IO.Put_Line("TM "& SC'Img & "  HK log"));
-            --                    User_Interface.Put_TM(Image(Clock, "%T ")
-            --                               & "TM " & SC'Img & " "
-            --                               & " HK log");
-            --                    for i in 1..Message.Length loop
-            --                       M := Message.Data_Log(i);
-            --                       Split(M.Timestamp, SC, TS);
-            --  --                       pragma Debug
-            --  --                         (System.IO.Put_Line("            "
-            --  --                          & SC'Img & " " & M.Value'Img));
-            --                       User_Interface.Put_TM("            "
-            --                                  & SC'Img & " " & M.Value'Img);
-            --                 end loop;
-      end case;
-
+      Put (TTC_Data.Strings.Image(M));
    end Put;
-
-   ---------------------
-   -- Image functions --
-   ---------------------
-
-   function Image (T : Mission_Time) return String  is
-   begin
-      return -Mission_Time_Format(+(" %09u "), T);
-   end Image;
-
-   function Image (S : Sensor_Reading) return String is
-   begin
-      return -Sensor_Reading_Format(+(" %04u "), S);
-   end Image;
-
-   function Image (T : Temperature_Range) return String is
-   begin
-      return -Temperature_Range_Format (+(" %4.1f C "), T);
-   end Image;
-
 
    ----------------------
    -- Command listener --
