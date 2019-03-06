@@ -31,7 +31,7 @@
 
 --  Main procedure of toy ground station system - graphic interface version
 
-with TM_Receiver;
+with TTC;
 -- TheTM_Receiver package contains the telemetry reception subsystem
 
 --with TC_Sender;
@@ -49,8 +49,7 @@ begin
    pragma Debug(System.IO.Put_Line("--- GS start ---"));
 
    -- initialize components
-   TM_Receiver.Init;
-   --TC_Sender.Init;
+   TTC.Init;
    User_Interface.Init;
 
    -- control returns here if the GUi window is closed

@@ -21,7 +21,9 @@ with HK_Data;       use HK_Data;
 
 package TTC_Data is
 
-   type TM_Type is (Basic, Housekeeping);
+   -- Telemeetry
+
+   type TM_Type is (Basic, Housekeeping, Error);
    --  Basic TM contais the last sensor data
    --  Housekeeping TM contains an array with a log of recent sensor data
 
@@ -33,7 +35,19 @@ package TTC_Data is
                Data      : Sensor_Data;
             when Housekeeping =>
                Data_Log  : HK_Log;
+            when Error =>
+               null;
          end case;
+      end record;
+
+   -- Telecommand
+
+   type TC_Type is (HK);
+   -- HK TC requests a housekeeping TM to be sent to ground
+
+   type TC_Message(Kind : TC_Type) is
+      record
+         Timestamp : Mission_Time;
       end record;
 
 end TTC_Data;

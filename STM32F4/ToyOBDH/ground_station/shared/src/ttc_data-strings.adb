@@ -117,6 +117,16 @@ package body TTC_Data.Strings is
                return To_String (TM_String);
             end;
 
+         when Error =>
+            declare
+               TM_String : String :=
+                 Image(Clock, "%T") & " TM " &
+                 " ********* " &
+                 " **** ";
+            begin
+               return TM_String;
+            end;
+
       end case;
 
    end Image;

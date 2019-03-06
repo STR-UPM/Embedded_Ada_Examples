@@ -31,7 +31,7 @@
 --  Main procedure of toy ground station system - text terminal version
 --  Compile with native compiler
 
-with TM_Receiver;
+with TTC;
 -- TheTM_Receiver package contains the telemetry reception subsystem
 
 --  with TC_Sender;
@@ -47,7 +47,7 @@ procedure GS_Terminal is
 begin
    -- initialize components
    User_Interface.Init;
-   TM_Receiver.Init;
+   TTC.Init;
    --     TC_Sender.Init;
    loop
       null;

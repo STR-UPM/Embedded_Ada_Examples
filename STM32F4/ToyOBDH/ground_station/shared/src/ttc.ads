@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---  Copyright (C) 2017-2018 Universidad Politécnica de Madrid               --
+--          Copyright (C) 2017, Universidad Politécnica de Madrid           --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -10,7 +10,7 @@
 --     2. Redistributions in binary form must reproduce the above copyright --
 --        notice, this list of conditions and the following disclaimer in   --
 --        the documentation and/or other materials provided with the        --
---        distribution.                                                      --
+--        distribution.                                                     --
 --     3. Neither the name of the copyright holder nor the names of its     --
 --        contributors may be used to endorse or promote products derived   --
 --        from this software without specific prior written permission.     --
@@ -29,63 +29,30 @@
 --                                                                          --
 -------------------------------------------------------------------------------
 
--- Implementation of TM subsystem
--- TM messages are received through stremas on a serial interface
+-- Telemetry reception subsystem
 
-with User_Interface;
+with HK_Data;          use HK_Data;
+with TTC_Data;         use TTC_Data;
+with Ada.Real_Time;    use Ada.Real_Time;
 
-with GNAT.IO;                    use GNAT.IO;
-with GNAT.Serial_Communications; use GNAT.Serial_Communications;
+with System;
 
-with Ada.IO_Exceptions;
-with Ada.Exceptions; use Ada.Exceptions;
+package TTC is
 
-package body TM_Receiver is
+   procedure Init;
+   -- Initialize TTC sybsystem
 
-   ----------------------
-   -- Port definitions --
-   ----------------------
+   procedure Send (TC : TC_Type := HK);
+   -- Send a telecommand
 
-   COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB0";
+private
 
-   ----------
-   -- Init --
-   ----------
+   task TM_Receiver
+     with Priority =>  System.Default_Priority;
+   -- replace with DMS priority when available
 
-   procedure Init is
-   begin
-      null;
-   end Init;
+   task TC_Sender
+     with Priority => System.Default_Priority;
+   -- replace with DMS priority when available
 
-   -------------------
-   -- Receiver task --
-   -------------------
-
-   task body TM_Receiver_Task is
-   begin
-      COM.Open (USB);
-      COM.Set (Rate => B115200, Block => True);
-
-      loop
-         receive:
-         begin
-            --delay 5.0; -- let USART interface recover
-
-            declare
-               Message : TM_Message := TM_Message'Input (COM'Access);
-            begin
-               User_Interface.Put (Message);
-            end;
-         exception
-            when E : others =>
-               User_Interface.Put ("TM receiver: " & Exception_Name (E));
-         end receive;
-      end loop;
-
-   exception
-      when E : others =>
-         User_Interface.Put (Exception_Information (E));
-   end TM_Receiver_Task;
-
-end TM_Receiver;
+end TTC;
