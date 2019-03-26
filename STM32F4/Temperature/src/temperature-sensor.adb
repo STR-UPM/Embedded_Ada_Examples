@@ -75,7 +75,7 @@ package body Temperature.Sensor is
       --  the computed temperature
 
       V_Sense_At_25_Degrees : constant := 0.76;
-      --  Per the F429 and F405/7 datasheets, at 25 degrees Celcius the sensed
+      --  Per the F429 and F405/7 datasheets, at 25 degrees Celsius the sensed
       --  voltage will be approx 0.76V, but this is only estimated by the
       --  manufacturer.
       --  See the F429xx datasheet, section 6.3.22, table 82, pg 159

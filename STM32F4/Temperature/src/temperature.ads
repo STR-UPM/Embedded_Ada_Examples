@@ -19,11 +19,11 @@
 
 package Temperature is
 
-   --  temperature in °C is represented as a float vaule
+   --  temperature in °C is represented as a float value
    subtype Temperature is Float;
 
    --  Start the temperature reading function
-   --  The temperature sensor is read continously, and th etemperature value
+   --  The temperature sensor is read continously, and the temperature value
    --  in degrees Celsius is diplayed on the screen
    --
    procedure Start;
