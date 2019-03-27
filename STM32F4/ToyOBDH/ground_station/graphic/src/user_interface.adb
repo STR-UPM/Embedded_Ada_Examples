@@ -46,8 +46,19 @@ with Gtk.Widget;          use Gtk.Widget;
 with Pango.Font;          use Pango.Font;
 
 with TTC_Data.Strings;
+pragma Warnings(Off);
+with System.IO;
+pragma Warnings(On);
+with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 
 package body User_Interface is
+
+   ----------------------
+   -- Port definitions --
+   ----------------------
+
+   COM : aliased Serial_Port;
+   USB : constant Port_Name := "/dev/ttyUSB0";
 
    ----------------------
    -- Graphic objects --
@@ -75,8 +86,13 @@ package body User_Interface is
    -- send a TC message
    procedure button_clicked(Self : access Gtk_Button_Record'Class) is
    begin
-      null;
-     -- TC_Sender.Send;
+     send:
+      declare
+         Message : TC_Message := (Kind => HK, Timestamp => 0);
+      begin
+         System.IO.Put_Line("Send TC");
+         TC_Message'Output (COM'Access, Message);
+      end send;
    end button_clicked;
 
    ----------
@@ -86,6 +102,8 @@ package body User_Interface is
    procedure Init is
 
    begin
+      COM.Open (USB);
+      COM.Set (Rate => B115200);
       -- use thread-aware gdk
       Gdk.Threads.G_Init;
       Gdk.Threads.Init;
@@ -114,7 +132,7 @@ package body User_Interface is
 
       Gtk_New(Scrolled);
       Scrolled.Set_Policy(Policy_Automatic, Policy_Automatic);
-      Scrolled.Set_Size_Request(60,400);
+      Scrolled.Set_Size_Request(800,400);
       Scrolled.Add(Text);
       Grid.Attach(Scrolled, 0,1,3,12);
 

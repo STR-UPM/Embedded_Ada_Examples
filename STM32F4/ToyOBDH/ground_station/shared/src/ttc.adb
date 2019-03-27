@@ -73,7 +73,13 @@ package body TTC is
 
    procedure Send (TC : TC_Type := HK) is
    begin
-      null;
+      send:
+      declare
+         Message : TC_Message := (Kind => HK, Timestamp => 0);
+      begin
+         System.IO.Put_Line("Send TC");
+         TC_Message'Output (COM'Access, Message);
+      end send;
    end Send;
 
    -----------------
@@ -115,7 +121,7 @@ package body TTC is
 
 
       loop
-         delay 13.0;
+         delay 30.0;
 
          send:
          declare
