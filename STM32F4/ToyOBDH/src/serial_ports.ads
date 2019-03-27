@@ -45,7 +45,7 @@ package Serial_Ports is
 
    type Serial_Port (Device : not null access Peripheral_Descriptor) is
      new Ada.Streams.Root_Stream_Type with record
-      Timeout : Time_Span := Time_Span_Last;
+      Timeout : Time_Span := Milliseconds(1500); --Time_Span_Last;--
    end record;
 
    procedure Initialize (This : in out Serial_Port);

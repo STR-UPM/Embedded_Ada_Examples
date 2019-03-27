@@ -36,13 +36,13 @@ package body TTC is
       when E: Ada.IO_Exceptions.End_Error =>
          return TM_Message'(Kind => Basic,
                             Timestamp => 0,
-                            Data => (Value => 0,
+                            Data => (Value => ( Temperature => 0, Light => 0),
                                      Timestamp => 0));
          --           Put_Line ("Rx error " & Exception_Message (E));
       when E : others =>
          return TM_Message'(Kind => Basic,
                             Timestamp => 0,
-                            Data => (Value => 1,
+                            Data => (Value => ( Temperature => 1, Light => 1),
                                      Timestamp => 0));
          --           Put_Line (Exception_Message (E));
    end Next_TM;

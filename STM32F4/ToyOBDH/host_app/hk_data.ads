@@ -41,12 +41,18 @@ package HK_Data is
    --  To be converted to engineering units on ground.
    --  Range is 0 .. 4095 (12 bit ADC) for 3 V reference voltage.
 
+   type Sensors_Output is record
+      Temperature : Sensor_Reading;
+      Light       : Sensor_Reading;
+   end record;
+   --  Sensor reading of temperature and ligth sensors.
+
    type Mission_Time is new Interfaces.Integer_64;
    --  Mission time in seconds
 
    type Sensor_Data is
       record
-         Value     : Sensor_Reading;
+         Value     : Sensors_Output;
          Timestamp : Mission_Time;
       end record
      with Pack;

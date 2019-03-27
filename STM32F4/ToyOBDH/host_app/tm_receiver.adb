@@ -30,8 +30,9 @@ package body TM_Receiver is
                   Message : TM_Message := TTC.Next_TM;
                begin
                   Put_Line (Image(Clock, "%T ") &
-                              "TM " & Message.Data.Value'Img &
-                              " : "  & Message.Data.Timestamp'Img);
+                              "TM     Temperature:" & Message.Data.Value.Temperature'Img &
+                              "    Light:" & Message.Data.Value.Light'Img &
+                              "    Time "  & Message.Data.Timestamp'Img);
                   --                 TTC.Receive (Data);
                   --                 Put_Line (Image(Clock, "%T ") &
                   --                             "TM " & Data'Img);

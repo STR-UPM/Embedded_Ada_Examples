@@ -27,17 +27,12 @@ package TTC_Data is
    --  Basic TM contais the last sensor data
    --  Housekeeping TM contains an array with a log of recent sensor data
 
-   type TM_Message (Kind : TM_Type) is
+   type TM_Message is
       record
          Timestamp : Mission_Time;
-         case Kind is
-            when Basic =>
-               Data      : Sensor_Data;
-            when Housekeeping =>
-               Data_Log  : HK_Log;
-            when Error =>
-               null;
-         end case;
+         Kind      : TM_Type;
+         Data      : Sensor_Data;
+
       end record;
 
    -- Telecommand

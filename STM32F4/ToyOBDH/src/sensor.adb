@@ -32,10 +32,14 @@ package body Sensor is
 
    --  ADC parameters
 
-   Converter     : Analog_To_Digital_Converter renames ADC_1;
-   Input_Channel : constant Analog_Input_Channel := 5;
-   Input         : constant GPIO_Point := PA5;
+   Converter_temperature     : Analog_To_Digital_Converter renames ADC_1;
+   Input_Channel_temperature : constant Analog_Input_Channel := 5;
+   Input_temperature         : constant GPIO_Point := PA5;
 
+
+   Converter_light     : Analog_To_Digital_Converter renames ADC_2;
+   Input_Channel_light : constant Analog_Input_Channel := 3;
+   Input_ligth         : constant GPIO_Point := PA3;
    --  Local subprograms
 
    procedure Initialize;
@@ -46,17 +50,23 @@ package body Sensor is
 
    procedure Initialize is
 
-      All_Regular_Conversions : constant Regular_Channel_Conversions :=
-        (1 => (Channel     => Input_Channel,
+      All_Regular_Conversions_temperature : constant Regular_Channel_Conversions :=
+        (1 => (Channel     => Input_Channel_temperature,
+               Sample_Time => Sample_144_Cycles));  -- needs 10 us minimum
+            All_Regular_Conversions_light : constant Regular_Channel_Conversions :=
+        (1 => (Channel     => Input_Channel_light,
                Sample_Time => Sample_144_Cycles));  -- needs 10 us minimum
 
    begin
       Initialize_LEDs;
 
-      Enable_Clock (Input);
-      Configure_IO (Input, (Mode => Mode_Analog, Resistors => Floating));
+      Enable_Clock (Input_temperature);
+      Enable_Clock (Input_ligth);
+      Configure_IO (Input_temperature, (Mode => Mode_Analog, Resistors => Floating));
+      Configure_IO (Input_ligth, (Mode => Mode_Analog, Resistors => Floating));
 
-      Enable_Clock (Converter);
+      Enable_Clock (Converter_temperature);
+      Enable_Clock (Converter_light);
       Reset_All_ADC_Units;
 
       Configure_Common_Properties
@@ -66,18 +76,32 @@ package body Sensor is
          Sampling_Delay => Sampling_Delay_5_Cycles);
 
       Configure_Unit
-        (Converter,
+        (Converter_temperature,
+         Resolution => ADC_Resolution_12_Bits,
+         Alignment  => Right_Aligned);
+
+      Configure_Unit
+        (Converter_light,
          Resolution => ADC_Resolution_12_Bits,
          Alignment  => Right_Aligned);
 
       Configure_Regular_Conversions
-        (Converter,
+        (Converter_temperature,
          Continuous  => False,
          Trigger     => Software_Triggered,
          Enable_EOC  => True,
-         Conversions => All_Regular_Conversions);
+         Conversions => All_Regular_Conversions_temperature);
 
-      Enable (Converter);
+      Configure_Regular_Conversions
+        (Converter_light,
+         Continuous  => False,
+         Trigger     => Software_Triggered,
+         Enable_EOC  => True,
+         Conversions => All_Regular_Conversions_light);
+
+
+      Enable (Converter_temperature);
+      Enable (Converter_light);
 
    end Initialize;
 
@@ -85,19 +109,25 @@ package body Sensor is
    -- Get --
    ---------
 
-   procedure Get (Reading : out Sensor_Reading) is
+   procedure Get (Reading : out Sensors_Output) is
       Successful : Boolean;
    begin
-      Start_Conversion (Converter);
-      Poll_For_Status (Converter,
+      Start_Conversion (Converter_temperature);
+      Start_Conversion (Converter_light);
+      Poll_For_Status (Converter_temperature,
+                       Regular_Channel_Conversion_Complete,
+                       Successful);
+      Poll_For_Status (Converter_light,
                        Regular_Channel_Conversion_Complete,
                        Successful);
       if not Successful then
-         Red_LED.Toggle;
-         Reading := 0;
+--           Red_LED.Toggle;
+         Reading.Temperature := 0;
+         Reading.Light := 0;
       else
-         Green_LED.Toggle;
-         Reading := Sensor_Reading (Conversion_Value (Converter));
+--           Green_LED.Toggle;
+         Reading.Temperature := Sensor_Reading (Conversion_Value (Converter_temperature));
+         Reading.Light := Sensor_Reading (Conversion_Value (Converter_light));
       end if;
    end Get;
 

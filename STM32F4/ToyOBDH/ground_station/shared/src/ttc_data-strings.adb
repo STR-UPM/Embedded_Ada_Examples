@@ -92,9 +92,13 @@ package body TTC_Data.Strings is
             declare
                TM_String : String :=
                  Image(Clock, "%T") & " TM " &
+                 "   Timestamp: " &
                  Image(M.Data.Timestamp) &
-                 Image(M.Data.Value) &
-                 Image(Temperature(M.Data.Value));
+                 "   Temperature: " &
+                 Image(M.Data.Value.Temperature) &
+                 Image(Temperature(M.Data.Value.Temperature)) &
+                 "   Light: " &
+                 Image(M.Data.Value.Light);
             begin
                return TM_String;
             end;
@@ -104,16 +108,14 @@ package body TTC_Data.Strings is
                TM_String : Bounded_String;
             begin
                Set_Bounded_String (TM_String, Image(Clock, "%T") &
-                                     " TM " &
+                                     " TM   HK log " &
+                                     "   Timestamp: " &
                                      Image(M.Timestamp) &
-                                     " HK log");
-               for i in 1..M.Data_Log'Length loop
-                  Append (TM_String, LF & "             " &
-                            Image (M.Data_Log(i).Timestamp) &
-                            Image (M.Data_Log(i).Value) &
-                            Image(Temperature(M.Data_Log(i).Value))
-                           );
-               end loop;
+                                     "   Temperature: " &
+                                     Image(M.Data.Value.Temperature) &
+                                     Image(Temperature(M.Data.Value.Temperature)) &
+                                     "   Light: " &
+                                     Image(M.Data.Value.Light));
                return To_String (TM_String);
             end;
 

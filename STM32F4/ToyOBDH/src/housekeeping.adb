@@ -51,7 +51,7 @@ package body Housekeeping is
    ----------
 
    procedure Read_Data is
-      Reading  : Sensor_Reading;
+      Reading  : Sensors_Output;
       Data     : Sensor_Data;
       SC       : Seconds_Count;
       TS       : Time_Span;

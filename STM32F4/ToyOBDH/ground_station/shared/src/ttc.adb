@@ -38,6 +38,7 @@ with GNAT.IO;                    use GNAT.IO;
 with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Streams; use Ada.Streams;
 
 with Ada.IO_Exceptions;
 with Ada.Exceptions; use Ada.Exceptions;
@@ -45,6 +46,9 @@ with Ada.Exceptions; use Ada.Exceptions;
 with System.IO;
 
 package body TTC is
+
+
+
 
    ----------------------
    -- Port definitions --
@@ -60,7 +64,7 @@ package body TTC is
    procedure Init is
    begin
       COM.Open (USB);
-      COM.Set (Rate => B115200, Block => True);
+      COM.Set (Rate => B115200);
    end Init;
 
    ----------
@@ -92,7 +96,7 @@ package body TTC is
             end;
          exception
             when E : others =>
-               User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0));
+               User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0,Data => (Value => (Temperature => 0, Light => 0) , Timestamp => 0 )  ));
                --User_Interface.Put ("TM receive: " & Exception_Name (E));
          end receive;
       end loop;
@@ -109,8 +113,9 @@ package body TTC is
    task body TC_Sender is
    begin
 
+
       loop
-         delay 30.0;
+         delay 13.0;
 
          send:
          declare

@@ -33,6 +33,7 @@ package body TTC is
 
    Port : aliased Serial_Port (Peripheral'Access);
 
+
    -------------------------
    -- Internal procedures --
    -------------------------

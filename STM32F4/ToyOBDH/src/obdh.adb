@@ -28,7 +28,7 @@ with HK_TM;         pragma Unreferenced (HK_TM);
 --  The HK_TM package contains the task that generates
 --  housekeeping telemetry messages that are sent to the ground station.
 
---  with TC_Receiver;   pragma Unreferenced (TC_Receiver);
+with TC_Receiver;   pragma Unreferenced (TC_Receiver);
 --  The TC_Receiver package contains the task that receives TC messages
 --  from the ground station and decodes them.
 

@@ -16,6 +16,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Streams;   use Ada.Streams;
+with STM32.Board;  use STM32.Board;
 
 package body Serial_Ports is
 
@@ -167,9 +168,11 @@ package body Serial_Ports is
    is
    begin
       for Next of Buffer loop
+         Red_LED.Toggle;
          Await_Send_Ready (This.Device.Transceiver.all);
          Transmit (This.Device.Transceiver.all, Stream_Element'Pos (Next));
       end loop;
+      Red_LED.Toggle;
    end Write;
 
 end Serial_Ports;

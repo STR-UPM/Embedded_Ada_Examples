@@ -21,7 +21,7 @@ with HK_Data;  use HK_Data;
 
 package Sensor is  -- passive
 
-   procedure Get (Reading : out Sensor_Reading);
+   procedure Get (Reading : out Sensors_Output);
    --  Get the sensor raw temperature reading (0..4095)
 
 end Sensor;
