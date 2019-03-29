@@ -37,6 +37,8 @@ with TTC_Data;      use TTC_Data;
 
 package User_Interface is
 
+   Send_TC : Boolean := False;
+
    procedure Init;
    -- Init user interface
 

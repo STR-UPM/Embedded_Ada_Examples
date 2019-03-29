@@ -49,16 +49,8 @@ with TTC_Data.Strings;
 pragma Warnings(Off);
 with System.IO;
 pragma Warnings(On);
-with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 
 package body User_Interface is
-
-   ----------------------
-   -- Port definitions --
-   ----------------------
-
-   COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB0";
 
    ----------------------
    -- Graphic objects --
@@ -86,13 +78,7 @@ package body User_Interface is
    -- send a TC message
    procedure button_clicked(Self : access Gtk_Button_Record'Class) is
    begin
-     send:
-      declare
-         Message : TC_Message := (Kind => HK, Timestamp => 0);
-      begin
-         System.IO.Put_Line("Send TC");
-         TC_Message'Output (COM'Access, Message);
-      end send;
+     Send_TC := True;
    end button_clicked;
 
    ----------
@@ -102,8 +88,6 @@ package body User_Interface is
    procedure Init is
 
    begin
-      COM.Open (USB);
-      COM.Set (Rate => B115200);
       -- use thread-aware gdk
       Gdk.Threads.G_Init;
       Gdk.Threads.Init;
@@ -176,5 +160,7 @@ package body User_Interface is
    begin
       Put (TTC_Data.Strings.Image (M));
    end Put;
+
+
 
 end User_Interface;

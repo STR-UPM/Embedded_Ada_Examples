@@ -18,10 +18,18 @@
 --  This package provides an abstraction layer for the sensor device.
 
 with HK_Data;  use HK_Data;
+with STM32.ADC; use STM32.ADC;
+
+with HAL;          use HAL;
+with STM32.GPIO;   use STM32.GPIO;
 
 package Sensor is  -- passive
 
-   procedure Get (Reading : out Sensors_Output);
-   --  Get the sensor raw temperature reading (0..4095)
+   procedure Initialize
+     (Input_Channel : in  Analog_Input_Channel;
+      Input : in GPIO_Point);
+
+   procedure Get (Reading : out Sensor_Reading);
+   --  Get the sensor raw reading (0..4095)
 
 end Sensor;

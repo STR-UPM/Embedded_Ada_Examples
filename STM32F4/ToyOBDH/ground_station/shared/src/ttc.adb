@@ -43,7 +43,9 @@ with Ada.Streams; use Ada.Streams;
 with Ada.IO_Exceptions;
 with Ada.Exceptions; use Ada.Exceptions;
 
+pragma Warnings(Off);
 with System.IO;
+pragma Warnings(On);
 
 package body TTC is
 
@@ -121,16 +123,11 @@ package body TTC is
 
 
       loop
-         delay 30.0;
-
-         send:
-         declare
-            Message : TC_Message := (Kind => HK, Timestamp => 0);
-         begin
-            System.IO.Put_Line("Send TC");
-            TC_Message'Output (COM'Access, Message);
-         end send;
-
+         if User_Interface.Send_TC then
+            User_Interface.Send_TC := False;
+            Send;
+         end if;
+         --delay until Clock + Milliseconds (100);
       end loop;
 
    exception

@@ -22,8 +22,19 @@ with Sensor;
 with Storage;
 
 with Ada.Real_Time; use Ada.Real_Time;
+with STM32.ADC; use STM32.ADC;
+with STM32.Device; use STM32.Device;
+with STM32.GPIO;   use STM32.GPIO;
+
 
 package body Housekeeping is
+
+      --  ADC parameters
+
+   Input_Channel_temperature : constant Analog_Input_Channel := 5;
+   Input_temperature         : constant GPIO_Point := PA5;
+   Input_Channel_light       : constant Analog_Input_Channel := 3;
+   Input_ligth               : constant GPIO_Point := PA3;
 
    -------------------------
    -- Internal operations --
@@ -51,15 +62,19 @@ package body Housekeeping is
    ----------
 
    procedure Read_Data is
-      Reading  : Sensors_Output;
-      Data     : Sensor_Data;
-      SC       : Seconds_Count;
-      TS       : Time_Span;
+      Output : Sensors_Output;
+      Data   : Sensor_Data;
+      SC     : Seconds_Count;
+      TS     : Time_Span;
    begin
-      Sensor.Get (Reading);
+      Sensor.Initialize(Input_Channel_temperature,Input_temperature);
+      Sensor.Get (Output.Temperature);
+      Sensor.Initialize(Input_Channel_light,Input_ligth);
+      Sensor.Get (Output.Light);
       Split (Clock, SC, TS);
-      Data := (Value => Reading, Timestamp => Mission_Time (SC));
+      Data := (Value => Output, Timestamp => Mission_Time (SC));
       Storage.Put (Data);
    end Read_Data;
+
 
 end Housekeeping;
