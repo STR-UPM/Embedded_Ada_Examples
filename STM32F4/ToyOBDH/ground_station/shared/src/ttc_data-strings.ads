@@ -20,5 +20,6 @@
 package TTC_Data.Strings is
 
    function Image (M : TM_Message) return String;
+   function Image (S : Sensor_Reading) return String;
 
 end TTC_Data.Strings;

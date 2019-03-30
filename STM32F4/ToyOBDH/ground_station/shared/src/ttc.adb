@@ -46,6 +46,9 @@ with Ada.Exceptions; use Ada.Exceptions;
 pragma Warnings(Off);
 with System.IO;
 pragma Warnings(On);
+with client_mqtt; use client_mqtt;
+with TTC_Data.Strings; use TTC_Data.Strings;
+with HK_Data.TMP36; use HK_Data.TMP36;
 
 package body TTC is
 
@@ -101,6 +104,10 @@ package body TTC is
                Message : TM_Message := TM_Message'Input (COM'Access);
             begin
                User_Interface.Put (Message);
+               if Message.Kind = Basic then
+                  SendMQTT("Temperature",Image(Message.Data.Value.Temperature));
+                  SendMQTT("Light",Image(Message.Data.Value.Light));
+               end if;
             end;
          exception
             when E : others =>
@@ -137,34 +144,5 @@ package body TTC is
 
 
 
-   ----------------
-   -- TC Request --
-   ----------------
-
---    protected body TC_Request
---     is
---
---        procedure Put (TC :     TC_Type) is
---        begin
---           Waiting := True;
---           Next_TC := TC;
---        end Put;
---
---        function  Next return TC_Type is
---        begin
---           return Next_TC;
---        end Next;
---
---        function  Pending return Boolean is
---        begin
---           return Waiting;
---        end Pending;
---
---        procedure Clear is
---        begin
---           Waiting := False;
---        end Clear;
---
---     end TC_Request;
 
 end TTC;
