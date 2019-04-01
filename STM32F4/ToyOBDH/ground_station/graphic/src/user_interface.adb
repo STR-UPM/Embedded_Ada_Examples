@@ -116,7 +116,7 @@ package body User_Interface is
 
       Gtk_New(Scrolled);
       Scrolled.Set_Policy(Policy_Automatic, Policy_Automatic);
-      Scrolled.Set_Size_Request(800,400);
+      Scrolled.Set_Size_Request(850,400);
       Scrolled.Add(Text);
       Grid.Attach(Scrolled, 0,1,3,12);
 

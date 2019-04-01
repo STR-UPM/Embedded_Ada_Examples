@@ -28,4 +28,17 @@ package body HK_Data.TMP36 is
       return Temperature_Range (T);
    end Temperature;
 
+   -----------
+   -- Light --
+   -----------
+
+   function Light
+     (R : Sensor_Reading)
+      return Light_Range
+   is
+   begin
+      return Light_Range (100.0*Float(R)/Max_Count);
+   end Light;
+
+
 end HK_Data.TMP36;

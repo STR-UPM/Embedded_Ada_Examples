@@ -20,9 +20,8 @@
 --  This version is for a TMP36 sensor connected to GPIO pin 5 of
 --  the F429 Discovery Board. See the board user manual and the
 --  mapping in STM32.ADC.
-with STM32.Board;  use STM32.Board;
-with STM32.Device; use STM32.Device;
 
+with STM32.Board;  use STM32.Board;
 
 package body Sensor is
 
@@ -36,18 +35,35 @@ package body Sensor is
    ----------------
 
    procedure Initialize
-     (Input_Channel : in  Analog_Input_Channel;
-      Input : in GPIO_Point) is
+     (This          : in out Sensor;
+      Input_Channel : in Analog_Input_Channel;
+      Input_Point   : in GPIO_Point) is
+
+
+   begin
+      This.Input_Channel := Input_Channel;
+      This.Input_Point := Input_Point;
+
+
+   end Initialize;
+
+   --------------------
+   -- Get Temperature--
+   --------------------
+
+   procedure Get (This    : in Sensor;
+                  Reading : out Sensor_Reading) is
 
       All_Regular_Conversions : constant Regular_Channel_Conversions :=
-        (1 => (Channel     => Input_Channel,
+        (1 => (Channel     => This.Input_Channel,
                Sample_Time => Sample_144_Cycles));  -- needs 10 us minimum
 
+      Successful : Boolean;
    begin
       Initialize_LEDs;
 
-      Enable_Clock (Input);
-      Configure_IO (Input, (Mode => Mode_Analog, Resistors => Floating));
+      Enable_Clock (This.Input_Point);
+      Configure_IO (This.Input_Point, (Mode => Mode_Analog, Resistors => Floating));
       Enable_Clock (Converter);
       Reset_All_ADC_Units;
 
@@ -71,16 +87,6 @@ package body Sensor is
 
 
       Enable (Converter);
-
-   end Initialize;
-
-   --------------------
-   -- Get Temperature--
-   --------------------
-
-   procedure Get (Reading : out Sensor_Reading) is
-      Successful : Boolean;
-   begin
       Start_Conversion (Converter);
       Poll_For_Status (Converter,
                        Regular_Channel_Conversion_Complete,

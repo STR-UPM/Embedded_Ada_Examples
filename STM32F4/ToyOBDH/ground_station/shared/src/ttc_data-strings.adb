@@ -18,7 +18,6 @@
 -- String images of TTC messages
 
 with HK_Data;                 use HK_Data;
-with HK_Data.TMP36;           use HK_Data.TMP36;
 
 with Ada.Text_IO;             use Ada.Text_IO;
 with Ada.Calendar;            use Ada.Calendar;
@@ -59,7 +58,13 @@ package body TTC_Data.Strings is
       new Float_IO (Temperature_Range);
 
    function Temperature_Range_Format is
-      new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
+     new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
+
+   package Light_Range_IO is
+      new Float_IO (Light_Range);
+
+   function Light_Range_Format is
+      new Flt_Format (Light_Range, Light_Range_IO.Put);
 
    ---------------------
    -- Image functions --
@@ -80,6 +85,11 @@ package body TTC_Data.Strings is
       return -Temperature_Range_Format (+(" %4.1f C "), T);
    end Image;
 
+   function Image (L : Light_Range) return String is
+   begin
+      return -Light_Range_Format (+(" %4.1f"), L) & " %";
+   end Image;
+
    -----------
    -- Image --
    -----------
@@ -98,7 +108,8 @@ package body TTC_Data.Strings is
                  Image(M.Data.Value.Temperature) &
                  Image(Temperature(M.Data.Value.Temperature)) &
                  "   Light: " &
-                 Image(M.Data.Value.Light);
+                 Image(M.Data.Value.Light) &
+                 Image(Light(M.Data.Value.Light)) ;
             begin
                return TM_String;
             end;
@@ -115,7 +126,8 @@ package body TTC_Data.Strings is
                                      Image(M.Data.Value.Temperature) &
                                      Image(Temperature(M.Data.Value.Temperature)) &
                                      "   Light: " &
-                                     Image(M.Data.Value.Light));
+                                     Image(M.Data.Value.Light) &
+                                     Image(Light(M.Data.Value.Light))) ;
                return To_String (TM_String);
             end;
 

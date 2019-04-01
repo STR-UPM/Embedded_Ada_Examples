@@ -1,32 +1,22 @@
-with GNAT.Sockets;
+
 with Ada.Text_IO;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Streams; use Ada.Streams;
 with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
-
 
 package body client_mqtt is
 
    
-   Username : constant String := "cunjkfki";
-   Password : constant String := "NiROE_oOt3ZF";
-   Acepted : Boolean := False;
-   Except : exception;
 
 
-   Host : constant String := "m24.cloudmqtt.com";
-
-   Host_Entry : Gnat.Sockets.Host_Entry_Type
-     := GNAT.Sockets.Get_Host_By_Name(Host);
-
-   Address : GNAT.Sockets.Sock_Addr_Type;
-   Socket  : GNAT.Sockets.Socket_Type;
-   Channel : GNAT.Sockets.Stream_Access;
-
-   
-   
-   function ConnectMQTT return Boolean is
-      Accepted : Boolean := False;
+   procedure ConnectMQTT (This : in out Connection_MQTT; Parameters : in Connection_Parameters) is
+      
+      Client_ID : constant String := To_String(Parameters.Client_ID);
+      Username : constant String := To_String(Parameters.Username);
+      Password : constant String := To_String(Parameters.Password);
+      Host : constant String := To_String(Parameters.Host);
+      Host_Entry : Host_Entry_Type := Get_Host_By_Name(Host);
+      Address : Sock_Addr_Type;
+      
       Mqtt_Conn : constant Character :=
         Character'Val(16#10#);
       Conn_header: constant UTF_8_String :=
@@ -41,15 +31,10 @@ package body client_mqtt is
         Character'Val(16#03#) &  --LVL
         Character'Val(16#C2#) &  --FL
         Character'Val(16#00#) &  --KA
-        Character'Val(16#3C#) &
+        Character'Val(16#3C#);
+      CIDLen : constant UTF_8_String :=
         Character'Val(16#00#) &  --CIDLEN
-        Character'Val(16#06#) &
-        Character'Val(16#41#) &  --ID
-        Character'Val(16#41#) &
-        Character'Val(16#42#) &
-        Character'Val(16#42#) &
-        Character'Val(16#43#) &
-        Character'Val(16#43#);
+        Character'Val(Client_ID'Length);
       ULen : constant UTF_8_String :=
         Character'Val(16#00#) &  --ULEN
         Character'Val(Username'Length);
@@ -58,49 +43,54 @@ package body client_mqtt is
         Character'Val(Password'Length);
       Connection : constant UTF_8_String :=
         Mqtt_Conn &
-        Character'Val(Conn_header'Length + ULen'Length + Username'Length + PLen'Length + Password'Length) &
+        Character'Val(Conn_header'Length + CIDLen'Length + Client_ID'Length + ULen'Length + Username'Length + PLen'Length + Password'Length) &
         Conn_header &
+        CIDLen &
+        Client_ID &
         ULen &
         Username &
         PLen &
         Password;
 
 
-      Data    : Ada.Streams.Stream_Element_Array (1..1024);
-      Size    : Ada.Streams.Stream_Element_Offset;
-      Ret     : Ada.Strings.Unbounded.Unbounded_String;
+      Data    : Stream_Element_Array (1..1024);
+      Size    : Stream_Element_Offset;
+      Ret     : Unbounded_String;
       Connection_Acepted : constant UTF_8_String :=
         Character'Val(16#20#) &
         Character'Val(16#02#) &
         Character'Val(16#00#) &
         Character'Val(16#00#);
+      Except : exception;
 
    begin
 
       -- Open a TCP connection to the host
-      Address.Addr := GNAT.Sockets.Addresses(Host_Entry, 1);
-      Address.Port := 15484;
-      GNAT.Sockets.Create_Socket (Socket);
-      GNAT.Sockets.Connect_Socket (Socket, Address);
+      Address.Addr := Addresses(Host_Entry, 1);
+      Address.Port := Parameters.Port;
+      Create_Socket (This.Socket);
+      Connect_Socket (This.Socket, Address);
 
       -- Prepare stream to accept incoming data and push the
       -- MQTT connection
-      Channel := Gnat.Sockets.Stream (Socket);
-      String'Write (Channel, Connection);
+      This.Channel := Stream (This.Socket);
+      String'Write (This.Channel, Connection);
 
-      GNAT.Sockets.Receive_Socket(Socket,Data,Size);
+      Receive_Socket(This.Socket,Data,Size);
       for i in 1 .. Size loop
          Ret := Ret & Character'Val(Data(i));
       end loop;
-      if Connection_Acepted = Ada.Strings.Unbounded.To_String(Ret) then
-         Accepted := True;
-         Ada.Text_IO.Put_Line ("Acepted");
+      if Connection_Acepted = To_String(Ret) then
+         Ada.Text_IO.Put_Line ("MQTT connection acepted");
+      else
+         raise Except with "MQTT CONNECTION NOT ACEPTED";
       end if;
-      return Accepted;
 
    end ConnectMQTT;
 
-   procedure SendMQTT (Topic : in String; Message : in String) is
+   procedure PublishMQTT (This: in Connection_MQTT; Parameters : in Publish_Parameters) is
+      Topic : constant String := To_String(Parameters.Topic);
+      Message : constant String := To_String(Parameters.Message);
       Mqtt_Pub : constant Character :=
         Character'Val(16#30#);
       Pub_header: constant UTF_8_String :=
@@ -114,19 +104,11 @@ package body client_mqtt is
         Message;
 
    begin
-      String'Write (Channel, Publish);
+      String'Write (This.Channel, Publish);
 
 
-   end SendMQTT;
-   
-begin
-   
-   Acepted := ConnectMQTT;
-   if not Acepted then 
-      raise Except with "MQTT NOT ACEPTED";
-   end if;
-   
-   delay (0.1);
+   end PublishMQTT;
+
 
 
 end client_mqtt;

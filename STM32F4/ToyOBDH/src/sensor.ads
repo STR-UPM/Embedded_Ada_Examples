@@ -22,14 +22,27 @@ with STM32.ADC; use STM32.ADC;
 
 with HAL;          use HAL;
 with STM32.GPIO;   use STM32.GPIO;
+with STM32.Device; use STM32.Device;
 
 package Sensor is  -- passive
 
-   procedure Initialize
-     (Input_Channel : in  Analog_Input_Channel;
-      Input : in GPIO_Point);
+    type Sensor is tagged private;
 
-   procedure Get (Reading : out Sensor_Reading);
+   procedure Initialize
+     (This          : in out Sensor;
+      Input_Channel : in Analog_Input_Channel;
+      Input_Point   : in GPIO_Point);
+
+   procedure Get (This    : in Sensor;
+                  Reading : out Sensor_Reading);
    --  Get the sensor raw reading (0..4095)
+
+
+private
+
+   type Sensor is tagged record
+     Input_Channel : Analog_Input_Channel;
+     Input_Point   : GPIO_Point;
+   end record;
 
 end Sensor;

@@ -49,7 +49,7 @@ begin
    pragma Debug(System.IO.Put_Line("--- GS start ---"));
 
    -- initialize components
-   TTC.Init;
+   --TTC.Init;
    User_Interface.Init;
 
    -- control returns here if the GUi window is closed

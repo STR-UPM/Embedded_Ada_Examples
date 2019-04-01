@@ -16,10 +16,13 @@
 ------------------------------------------------------------------------------
 
 -- String images of TTC messages
+with HK_Data.TMP36;           use HK_Data.TMP36;
 
 package TTC_Data.Strings is
 
    function Image (M : TM_Message) return String;
    function Image (S : Sensor_Reading) return String;
+   function Image (T : Temperature_Range) return String;
+   function Image (L : Light_Range) return String;
 
 end TTC_Data.Strings;

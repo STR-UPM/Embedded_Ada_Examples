@@ -49,11 +49,25 @@ pragma Warnings(On);
 with client_mqtt; use client_mqtt;
 with TTC_Data.Strings; use TTC_Data.Strings;
 with HK_Data.TMP36; use HK_Data.TMP36;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package body TTC is
 
+   ----------------------
+   -- MQTT definitions --
+   ----------------------
+   Connection_Param : constant Connection_Parameters :=
+     (Host => To_Unbounded_String ("m24.cloudmqtt.com"),
+      Port => 15484,
+      Client_ID => To_Unbounded_String ("AABBCC"),
+      Username => To_Unbounded_String ("cunjkfki"),
+      Password => To_Unbounded_String ("NiROE_oOt3ZF"));
 
+   Publish_Param : constant Publish_Parameters :=
+     (Topic => To_Unbounded_String ("test"),
+      Message => To_Unbounded_String ("hello"));
 
+   Con_MQTT : Connection_MQTT;
 
    ----------------------
    -- Port definitions --
@@ -70,6 +84,7 @@ package body TTC is
    begin
       COM.Open (USB);
       COM.Set (Rate => B115200);
+      Con_MQTT.ConnectMQTT(Connection_Param);
    end Init;
 
    ----------
@@ -105,8 +120,11 @@ package body TTC is
             begin
                User_Interface.Put (Message);
                if Message.Kind = Basic then
-                  SendMQTT("Temperature",Image(Message.Data.Value.Temperature));
-                  SendMQTT("Light",Image(Message.Data.Value.Light));
+                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("Temperature"),
+                               Message => To_Unbounded_String(Image(Temperature(Message.Data.Value.Temperature))) ));
+
+                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("Light"),
+                               Message => To_Unbounded_String(Image(Light(Message.Data.Value.Light)))));
                end if;
             end;
          exception
@@ -141,7 +159,6 @@ package body TTC is
       when E : others =>
          User_Interface.Put ("TC " & Exception_Information (E));
    end TC_Sender;
-
 
 
 
