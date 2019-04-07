@@ -39,17 +39,9 @@ package body Basic_TM is -- cyclic
 
    task body Basic_TM_Task is
       Next_Time : Time :=  Clock + Milliseconds (Start_Delay);
---        Count : Natural := 0; -- quitar
    begin
       loop
          delay until Next_Time;
---           -- quitar --
---           Count := (Count + 1) mod 5;
---           if Count = 0 then
---              HK_TM.Send;
---           else
---              Send_TM_Message;
---           end if;
          Send_TM_Message;
          Next_Time := Next_Time + Milliseconds (Period);
       end loop;

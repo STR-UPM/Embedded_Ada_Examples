@@ -62,10 +62,11 @@ package body TTC is
       Client_ID => To_Unbounded_String ("AABBCC"),
       Username => To_Unbounded_String ("cunjkfki"),
       Password => To_Unbounded_String ("NiROE_oOt3ZF"));
-
-   Publish_Param : constant Publish_Parameters :=
-     (Topic => To_Unbounded_String ("test"),
-      Message => To_Unbounded_String ("hello"));
+   Subscribe_Param : constant Subscribe_Parameters :=
+     (Topic => To_Unbounded_String ("tc"),
+      QoS => Character'Val(16#00#),
+      Packet_ID => Character'Val(16#00#) & Character'Val(16#01#),
+      Expected_Message => To_Unbounded_String ("tc"));
 
    Con_MQTT : Connection_MQTT;
 
@@ -85,6 +86,8 @@ package body TTC is
       COM.Open (USB);
       COM.Set (Rate => B115200);
       Con_MQTT.ConnectMQTT(Connection_Param);
+      delay (0.1);
+      Con_MQTT.SubscribeMQTT(Subscribe_Param);
    end Init;
 
    ----------
@@ -120,15 +123,19 @@ package body TTC is
             begin
                User_Interface.Put (Message);
                if Message.Kind = Basic then
-                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("Temperature"),
-                               Message => To_Unbounded_String(Image(Temperature(Message.Data.Value.Temperature))) ));
+                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("basic"),
+                                        Message => To_Unbounded_String(MQTTImage(Message)) ));
 
-                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("Light"),
-                               Message => To_Unbounded_String(Image(Light(Message.Data.Value.Light)))));
+               elsif Message.Kind = Housekeeping then
+                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("housekeeping"),
+                                        Message => To_Unbounded_String(MQTTImage(Message)) ));
+
                end if;
+
             end;
          exception
             when E : others =>
+               null;
                User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0,Data => (Value => (Temperature => 0, Light => 0) , Timestamp => 0 )  ));
                --User_Interface.Put ("TM receive: " & Exception_Name (E));
          end receive;
@@ -145,10 +152,9 @@ package body TTC is
 
    task body TC_Sender is
    begin
-
-
       loop
-         if User_Interface.Send_TC then
+         if User_Interface.Send_TC or else ReceivedMQTT then
+            ReadingMQTT;
             User_Interface.Send_TC := False;
             Send;
          end if;

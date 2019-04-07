@@ -1,10 +1,44 @@
 
 with Ada.Text_IO;
 with Ada.Streams; use Ada.Streams;
-with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
 
 package body client_mqtt is
 
+   
+  
+      
+   task body Subscriber_Task is
+      Data    : Stream_Element_Array (1..1024);
+      Size    : Stream_Element_Offset;
+      Ret     : Unbounded_String;
+      sub_connection : Connection_MQTT;
+      Expected_MQTT : Unbounded_String;
+   begin
+      accept Start_Subscriber_Task (InConnection: in Connection_MQTT;Subscribe_Param : in Subscribe_Parameters) do
+         sub_connection := InConnection;
+         Expected_MQTT := Character'Val(16#30#) &
+           Character'Val(2+To_String(Subscribe_Param.Topic)'Length+To_String(Subscribe_Param.Expected_Message)'Length) &
+           Character'Val(16#00#) &
+           Character'Val(To_String(Subscribe_Param.Topic)'Length) &
+           Subscribe_Param.Topic &
+           To_String(Subscribe_Param.Expected_Message);
+        
+      end Start_Subscriber_Task;
+      loop
+         delay 0.01;
+         Receive_Socket(sub_connection.Socket,Data,Size);
+         if (size > 4) then 
+            for i in 1 .. Size loop
+               Ret := Ret & Character'Val(Data(i));
+            end loop;
+            if(To_String(Expected_MQTT) = To_String(Ret)) then
+               Ada.Text_IO.Put_Line ("Subscriber Message");
+               Control_Subscriber.Set_ReceivedMQTT(True);
+            end if;
+         end if;
+         Ret := To_Unbounded_String("");
+      end loop;
+   end Subscriber_Task;
    
 
 
@@ -108,7 +142,64 @@ package body client_mqtt is
 
 
    end PublishMQTT;
-
+   
+   procedure SubscribeMQTT (This: in Connection_MQTT; Parameters : in Subscribe_Parameters) is
+      Topic : constant String := To_String(Parameters.Topic);
+      Mqtt_Sub : constant Character :=
+        Character'Val(16#82#);
+      Sub_header: constant UTF_8_String :=
+        Parameters.Packet_ID &
+        Character'Val(16#00#) &  --TPLEN
+        Character'Val(Topic'Length);
+      Subscribe : constant UTF_8_String :=
+        Mqtt_Sub &
+        Character'Val(Sub_header'Length + Topic'Length + 1) &
+        Sub_header &
+        Topic &
+        Parameters.QoS;
+      Subscriber_Ack : constant UTF_8_String := 
+        Character'Val(16#90#) &
+        Character'Val(16#03#) &
+        Parameters.Packet_ID &
+        Parameters.QoS;
+      Data    : Stream_Element_Array (1..1024);
+      Size    : Stream_Element_Offset;
+      Ret     : Unbounded_String;
+      Except : exception;
+      
+   begin
+      String'Write (This.Channel, Subscribe);
+      Receive_Socket(This.Socket,Data,Size);
+      for i in 1 .. Size loop
+         Ret := Ret & Character'Val(Data(i));
+      end loop;
+      if Subscriber_Ack = To_String(Ret) then
+         Ada.Text_IO.Put_Line ("MQTT Subscribed to "&Topic&" properly");
+      else
+         raise Except with "MQTT SUBSCRIPTION FAILED";
+      end if;
+      Sub_task.Start_Subscriber_Task(This, Parameters);
+      
+   end SubscribeMQTT;
+   
+   
+   
+   protected body Control_Subscriber is
+      procedure Set_ReceivedMQTT(set : in Boolean) is
+      begin
+         ReceivedMQTT := set;
+      end Set_ReceivedMQTT;
+      procedure DoneReadingMQTT is
+      begin
+         Set_ReceivedMQTT(False);
+      end DoneReadingMQTT;
+      function Get_ReceivedMQTT return Boolean is
+      begin
+         return ReceivedMQTT;
+      end Get_ReceivedMQTT;
+   end Control_Subscriber;
+   
 
 
 end client_mqtt;
+

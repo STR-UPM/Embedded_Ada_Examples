@@ -98,6 +98,7 @@ package body Serial_Ports is
       Device_Pins   : constant GPIO_Points
         := This.Device.Rx_Pin & This.Device.Tx_Pin;
    begin
+      Initialize_LEDs;
       Enable_Clock (Device_Pins);
       Enable_Clock (This.Device.Transceiver.all);
 

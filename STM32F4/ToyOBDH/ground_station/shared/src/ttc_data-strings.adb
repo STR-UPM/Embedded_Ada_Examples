@@ -121,7 +121,7 @@ package body TTC_Data.Strings is
                Set_Bounded_String (TM_String, Image(Clock, "%T") &
                                      " TM   HK log " &
                                      "   Timestamp: " &
-                                     Image(M.Timestamp) &
+                                     Image(M.Data.Timestamp) &
                                      "   Temperature: " &
                                      Image(M.Data.Value.Temperature) &
                                      Image(Temperature(M.Data.Value.Temperature)) &
@@ -144,5 +144,24 @@ package body TTC_Data.Strings is
       end case;
 
    end Image;
+
+   -----------
+   -- MQTTImage --
+   -----------
+
+   function MQTTImage (M : TM_Message) return String is
+   begin
+      declare
+         TM_String : String :=
+           Image(M.Data.Timestamp) &
+           "," &
+           Image(Temperature(M.Data.Value.Temperature)) &
+           "," &
+           Image(Light(M.Data.Value.Light)) ;
+      begin
+         return TM_String;
+      end;
+
+   end MQTTImage;
 
 end TTC_Data.Strings;

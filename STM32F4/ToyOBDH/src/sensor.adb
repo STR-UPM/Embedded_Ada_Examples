@@ -21,7 +21,6 @@
 --  the F429 Discovery Board. See the board user manual and the
 --  mapping in STM32.ADC.
 
-with STM32.Board;  use STM32.Board;
 
 package body Sensor is
 
@@ -60,7 +59,6 @@ package body Sensor is
 
       Successful : Boolean;
    begin
-      Initialize_LEDs;
 
       Enable_Clock (This.Input_Point);
       Configure_IO (This.Input_Point, (Mode => Mode_Analog, Resistors => Floating));
