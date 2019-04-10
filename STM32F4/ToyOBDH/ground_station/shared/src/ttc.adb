@@ -51,7 +51,7 @@ package body TTC is
    ----------------------
 
    COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB0";
+   USB : constant Port_Name := "/dev/ttyUSB1";
 
    ----------
    -- Init --
