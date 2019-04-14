@@ -2,14 +2,14 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with GNAT.Sockets; use GNAT.Sockets;
 with Ada.Strings.UTF_Encoding; use Ada.Strings.UTF_Encoding;
-
+with AWS.Client; use AWS;
 package client_mqtt is
 
-   type Connection_MQTT is tagged private;
+   type Connection_MQTT is tagged limited private;
 
    type Connection_Parameters is record
       Host : Unbounded_String;
-      Port : Port_Type;
+      Port : Unbounded_String;
       Client_ID : Unbounded_String;
       Username : Unbounded_String;
       Password : Unbounded_String;
@@ -30,8 +30,8 @@ package client_mqtt is
 
 
    procedure ConnectMQTT (This : in out Connection_MQTT; Parameters : in Connection_Parameters);
-   procedure PublishMQTT (This: in Connection_MQTT; Parameters : in Publish_Parameters);
-   procedure SubscribeMQTT (This: in Connection_MQTT; Parameters : in Subscribe_Parameters);
+   procedure PublishMQTT (This : in out Connection_MQTT; Parameters : in Publish_Parameters);
+   procedure SubscribeMQTT (This : in out Connection_MQTT; Parameters : in Subscribe_Parameters);
 
    function ReceivedMQTT return Boolean;
    procedure ReadingMQTT;
@@ -50,17 +50,18 @@ private
    procedure ReadingMQTT renames Control_Subscriber.DoneReadingMQTT;
 
    task type Subscriber_Task is
-      entry Start_Subscriber_Task (InConnection: in Connection_MQTT; Subscribe_Param : in Subscribe_Parameters);
+      entry Start_Subscriber_Task (InConnection : in out Connection_MQTT; Subscribe_Param : in Subscribe_Parameters);
    end Subscriber_Task;
 
 
    Sub_task : Subscriber_Task;
 
-   type Connection_MQTT is tagged record
-      Channel : Stream_Access;
-      Socket : Socket_Type;
+   type Connection_MQTT is tagged limited record
+      Connection : Client.HTTP_Connection;
+      Secure : Boolean;
    end record;
 
+   Security : Boolean := True;
 
 
 end client_mqtt;

@@ -1,6 +1,8 @@
 
 with Ada.Text_IO;
 with Ada.Streams; use Ada.Streams;
+with AWS.Net.Buffered;
+with AWS.Client.HTTP_Utils; use AWS;
 
 package body client_mqtt is
 
@@ -11,45 +13,44 @@ package body client_mqtt is
       Data    : Stream_Element_Array (1..1024);
       Size    : Stream_Element_Offset;
       Ret     : Unbounded_String;
-      sub_connection : Connection_MQTT;
       Expected_MQTT : Unbounded_String;
+      Socket : Net.Socket_Type'Class:= Net.Socket(Security);
    begin
-      accept Start_Subscriber_Task (InConnection: in Connection_MQTT;Subscribe_Param : in Subscribe_Parameters) do
-         sub_connection := InConnection;
+      accept Start_Subscriber_Task (InConnection : in out Connection_MQTT; Subscribe_Param : in Subscribe_Parameters) do
          Expected_MQTT := Character'Val(16#30#) &
            Character'Val(2+To_String(Subscribe_Param.Topic)'Length+To_String(Subscribe_Param.Expected_Message)'Length) &
            Character'Val(16#00#) &
            Character'Val(To_String(Subscribe_Param.Topic)'Length) &
            Subscribe_Param.Topic &
            To_String(Subscribe_Param.Expected_Message);
-        
+         Socket := Client.Get_Socket(InConnection.Connection).all;
+         
       end Start_Subscriber_Task;
       loop
-         delay 0.01;
-         Receive_Socket(sub_connection.Socket,Data,Size);
-         if (size > 4) then 
-            for i in 1 .. Size loop
-               Ret := Ret & Character'Val(Data(i));
-            end loop;
-            if(To_String(Expected_MQTT) = To_String(Ret)) then
-               Ada.Text_IO.Put_Line ("Subscriber Message");
-               Control_Subscriber.Set_ReceivedMQTT(True);
+            delay 0.01;
+            Net.Buffered.Read(Socket,Data,Size);
+            if (size > 4) then 
+               for i in 1 .. Size loop
+                  Ret := Ret & Character'Val(Data(i));
+               end loop;
+               if(To_String(Expected_MQTT) = To_String(Ret)) then
+                  Ada.Text_IO.Put_Line ("Subscriber Message");
+                  Control_Subscriber.Set_ReceivedMQTT(True);
+               end if;
             end if;
-         end if;
-         Ret := To_Unbounded_String("");
-      end loop;
+            Ret := To_Unbounded_String("");
+         end loop;
+      
    end Subscriber_Task;
    
 
 
-   procedure ConnectMQTT (This : in out Connection_MQTT; Parameters : in Connection_Parameters) is
+   procedure ConnectMQTT (This : in out Connection_MQTT; Parameters : in Connection_Parameters ) is
       
       Client_ID : constant String := To_String(Parameters.Client_ID);
       Username : constant String := To_String(Parameters.Username);
       Password : constant String := To_String(Parameters.Password);
-      Host : constant String := To_String(Parameters.Host);
-      Host_Entry : Host_Entry_Type := Get_Host_By_Name(Host);
-      Address : Sock_Addr_Type;
+      URL : Unbounded_String;
       
       Mqtt_Conn : constant Character :=
         Character'Val(16#10#);
@@ -75,7 +76,7 @@ package body client_mqtt is
       PLen : constant UTF_8_String :=
         Character'Val(16#00#) &  --PLEN
         Character'Val(Password'Length);
-      Connection : constant UTF_8_String :=
+      Connect : constant UTF_8_String :=
         Mqtt_Conn &
         Character'Val(Conn_header'Length + CIDLen'Length + Client_ID'Length + ULen'Length + Username'Length + PLen'Length + Password'Length) &
         Conn_header &
@@ -98,19 +99,26 @@ package body client_mqtt is
       Except : exception;
 
    begin
-
+      This.Secure := Security;
+      
+      if(Security) then
+         URL := "https://" & Parameters.Host & ":" & Parameters.Port;
+      else
+         URL := "http://" & Parameters.Host & ":" & Parameters.Port;
+      end if;
+      
+      
+      Ada.Text_IO.Put_Line (To_String(URL));
       -- Open a TCP connection to the host
-      Address.Addr := Addresses(Host_Entry, 1);
-      Address.Port := Parameters.Port;
-      Create_Socket (This.Socket);
-      Connect_Socket (This.Socket, Address);
+      Client.Create (This.Connection,To_String(URL),Persistent  => True);
+      Client.HTTP_Utils.Connect(This.Connection);
 
       -- Prepare stream to accept incoming data and push the
       -- MQTT connection
-      This.Channel := Stream (This.Socket);
-      String'Write (This.Channel, Connection);
+      Net.Buffered.Put(Client.Get_Socket(This.Connection).all,Connect);
+      Net.Buffered.Flush(Client.Get_Socket(This.Connection).all);
 
-      Receive_Socket(This.Socket,Data,Size);
+      Net.Buffered.Read(Client.Get_Socket(This.Connection).all,Data,Size);
       for i in 1 .. Size loop
          Ret := Ret & Character'Val(Data(i));
       end loop;
@@ -122,7 +130,7 @@ package body client_mqtt is
 
    end ConnectMQTT;
 
-   procedure PublishMQTT (This: in Connection_MQTT; Parameters : in Publish_Parameters) is
+   procedure PublishMQTT (This : in out Connection_MQTT; Parameters : in Publish_Parameters) is
       Topic : constant String := To_String(Parameters.Topic);
       Message : constant String := To_String(Parameters.Message);
       Mqtt_Pub : constant Character :=
@@ -138,12 +146,13 @@ package body client_mqtt is
         Message;
 
    begin
-      String'Write (This.Channel, Publish);
+      Net.Buffered.Put(Client.Get_Socket(This.Connection).all,Publish);
+      Net.Buffered.Flush(Client.Get_Socket(This.Connection).all);
 
 
    end PublishMQTT;
    
-   procedure SubscribeMQTT (This: in Connection_MQTT; Parameters : in Subscribe_Parameters) is
+   procedure SubscribeMQTT (This : in out Connection_MQTT; Parameters : in Subscribe_Parameters) is
       Topic : constant String := To_String(Parameters.Topic);
       Mqtt_Sub : constant Character :=
         Character'Val(16#82#);
@@ -168,8 +177,10 @@ package body client_mqtt is
       Except : exception;
       
    begin
-      String'Write (This.Channel, Subscribe);
-      Receive_Socket(This.Socket,Data,Size);
+      Net.Buffered.Put(Client.Get_Socket(This.Connection).all,Subscribe);
+      Net.Buffered.Flush(Client.Get_Socket(This.Connection).all);
+
+      Net.Buffered.Read(Client.Get_Socket(This.Connection).all,Data,Size);
       for i in 1 .. Size loop
          Ret := Ret & Character'Val(Data(i));
       end loop;
@@ -178,7 +189,7 @@ package body client_mqtt is
       else
          raise Except with "MQTT SUBSCRIPTION FAILED";
       end if;
-      Sub_task.Start_Subscriber_Task(This, Parameters);
+      Sub_task.Start_Subscriber_Task( This, Parameters);
       
    end SubscribeMQTT;
    
@@ -202,4 +213,3 @@ package body client_mqtt is
 
 
 end client_mqtt;
-

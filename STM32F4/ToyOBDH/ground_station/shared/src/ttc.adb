@@ -50,6 +50,7 @@ with client_mqtt; use client_mqtt;
 with TTC_Data.Strings; use TTC_Data.Strings;
 with HK_Data.TMP36; use HK_Data.TMP36;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+with AWS.Client;
 
 package body TTC is
 
@@ -57,11 +58,11 @@ package body TTC is
    -- MQTT definitions --
    ----------------------
    Connection_Param : constant Connection_Parameters :=
-     (Host => To_Unbounded_String ("m24.cloudmqtt.com"),
-      Port => 15484,
+     (Host => To_Unbounded_String ("acrux.dit.upm.es"),
+      Port => To_Unbounded_String ("8883"),
       Client_ID => To_Unbounded_String ("AABBCC"),
-      Username => To_Unbounded_String ("cunjkfki"),
-      Password => To_Unbounded_String ("NiROE_oOt3ZF"));
+      Username => To_Unbounded_String ("antonio52"),
+      Password => To_Unbounded_String ("TFGantonio9"));
    Subscribe_Param : constant Subscribe_Parameters :=
      (Topic => To_Unbounded_String ("tc"),
       QoS => Character'Val(16#00#),
