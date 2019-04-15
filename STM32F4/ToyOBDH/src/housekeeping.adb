@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- partial implementation of Antonio Ramos Nieto
 
 with HK_Data; use HK_Data;
 

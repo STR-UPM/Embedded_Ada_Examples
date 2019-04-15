@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  Author: Antonio Ramos Nieto
 --  This package provides an abstraction layer for the sensor device.
 
 with HK_Data;  use HK_Data;

@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  Author: Antonio Ramos Nieto
 --  Temperature sensor implementation.
 
 --  This version is for a TMP36 sensor connected to GPIO pin 5 of
@@ -60,6 +61,7 @@ package body Sensor is
       Successful : Boolean;
    begin
 
+      --Initialize converters
       Enable_Clock (This.Input_Point);
       Configure_IO (This.Input_Point, (Mode => Mode_Analog, Resistors => Floating));
       Enable_Clock (Converter);
@@ -95,7 +97,7 @@ package body Sensor is
       if not Successful then
          Reading := 0;
       else
-         Reading:= Sensor_Reading (Conversion_Value (Converter));
+         Reading:= Sensor_Reading (Conversion_Value (Converter)); -- read sensor
       end if;
    end Get;
 

@@ -15,13 +15,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Data types for the TTC subsystem.
+-- Data types for the TTC subsystem.
 
 with HK_Data;       use HK_Data;
 
 package TTC_Data is
 
-   -- Telemeetry
+   -- Telemetry
 
    type TM_Type is (Basic, Housekeeping, Error);
    --  Basic TM contais the last sensor data

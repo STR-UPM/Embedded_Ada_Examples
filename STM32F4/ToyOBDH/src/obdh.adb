@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  Partial implementation of Antonio Ramos Nieto
 --  This is the main procedure for the toy_obdh example.
 
 with Housekeeping;  pragma Unreferenced (Housekeeping);

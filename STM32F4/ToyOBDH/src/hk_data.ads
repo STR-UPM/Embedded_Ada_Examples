@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  Author: Antonio Ramos Nieto (Sensors_Output, Sensor_Data)
 --  Data types for the housekeeping subsystem
 
 with HAL;            use HAL;

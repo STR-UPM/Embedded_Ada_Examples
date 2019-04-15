@@ -31,9 +31,9 @@
 
 -- User interface
 
-with HK_Data;       use HK_Data;
-with HK_Data.TMP36; use HK_Data.TMP36;
-with TTC_Data;      use TTC_Data;
+with HK_Data;           use HK_Data;
+with HK_Data.Converter; use HK_Data.Converter;
+with TTC_Data;          use TTC_Data;
 
 package User_Interface is
 

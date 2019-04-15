@@ -15,10 +15,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- Author: Antonio Ramos Nieto (Light)
 -- TMP36 temperature sensor reading
 -- See TMP35/TMP36/TMP37 datasheet
 
-package HK_Data.TMP36 is
+package HK_Data.Converter is
 
    type Temperature_Range is digits 5 range -40.0 .. +125.0;
    type Light_Range is digits 5 range 0.0 .. 100.0;
@@ -28,4 +29,4 @@ package HK_Data.TMP36 is
    function Light (R : Sensor_Reading) return Light_Range
      with Inline;
 
-end HK_Data.TMP36;
+end HK_Data.Converter;

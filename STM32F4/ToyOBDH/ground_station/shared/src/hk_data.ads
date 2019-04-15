@@ -15,7 +15,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Data types for housekeeping data (ground station)
+-- Author: Antonio Ramos Nieto (Sensors_Output, Sensor_Data)
+-- Data types for housekeeping data (ground station)
 
 with Interfaces;
 package HK_Data is

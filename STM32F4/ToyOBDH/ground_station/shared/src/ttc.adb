@@ -29,13 +29,13 @@
 --                                                                          --
 -------------------------------------------------------------------------------
 
+-- Partial implementation of Antonio Ramos Nieto
 -- Implementation of TTC subsystem
 -- TTC messages are exchanged as streams on a serial interface
 
 with User_Interface;
 
 with GNAT.IO;                    use GNAT.IO;
-with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Streams; use Ada.Streams;
@@ -46,37 +46,10 @@ with Ada.Exceptions; use Ada.Exceptions;
 pragma Warnings(Off);
 with System.IO;
 pragma Warnings(On);
-with client_mqtt; use client_mqtt;
 with TTC_Data.Strings; use TTC_Data.Strings;
-with HK_Data.TMP36; use HK_Data.TMP36;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with AWS.Client;
+with HK_Data.Converter; use HK_Data.Converter;
 
 package body TTC is
-
-   ----------------------
-   -- MQTT definitions --
-   ----------------------
-   Connection_Param : constant Connection_Parameters :=
-     (Host => To_Unbounded_String ("acrux.dit.upm.es"),
-      Port => To_Unbounded_String ("8883"),
-      Client_ID => To_Unbounded_String ("AABBCC"),
-      Username => To_Unbounded_String ("antonio52"),
-      Password => To_Unbounded_String ("TFGantonio9"));
-   Subscribe_Param : constant Subscribe_Parameters :=
-     (Topic => To_Unbounded_String ("tc"),
-      QoS => Character'Val(16#00#),
-      Packet_ID => Character'Val(16#00#) & Character'Val(16#01#),
-      Expected_Message => To_Unbounded_String ("tc"));
-
-   Con_MQTT : Connection_MQTT;
-
-   ----------------------
-   -- Port definitions --
-   ----------------------
-
-   COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB0";
 
    ----------
    -- Init --
@@ -152,10 +125,11 @@ package body TTC is
    ---------------
 
    task body TC_Sender is
+     Received : Boolean := False;
    begin
       loop
-         if User_Interface.Send_TC or else ReceivedMQTT then
-            ReadingMQTT;
+         ReceivedMQTT(Received);
+         if User_Interface.Send_TC or else Received then
             User_Interface.Send_TC := False;
             Send;
          end if;

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2017, Universidad Politécnica de Madrid           --
+--  Copyright (C) 2017-2018 Universidad Politécnica de Madrid              --
 --                                                                          --
 --  Redistribution and use in source and binary forms, with or without      --
 --  modification, are permitted provided that the following conditions are  --
@@ -29,64 +29,51 @@
 --                                                                          --
 -------------------------------------------------------------------------------
 
--- Partial implementation of Antonio Ramos Nieto
--- Telemetry reception subsystem
+-- Author: Antonio Ramos Nieto (Light)
+-- Converts temperature and light values
 
-with HK_Data;          use HK_Data;
-with TTC_Data;         use TTC_Data;
-with Ada.Real_Time;    use Ada.Real_Time;
 
-with System;
-with GNAT.Serial_Communications; use GNAT.Serial_Communications;
-with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
-with AWS.Client;
-with client_mqtt; use client_mqtt;
+package body HK_Data.Converter is
 
-package TTC is
+   V_Ref       : constant := 2.930; -- V (measured value)
+   V_25C       : constant := 0.750; -- V
+   Scale       : constant := 0.010; -- V/C
+   Calibration : constant := -1.0;  -- C (experimental calibration)
 
-   procedure Init;
-   -- Initialize TTC sybsystem
+   Min_Temp  : constant := Temperature_Range'First;
+   Max_Temp  : constant := Temperature_Range'Last;
+   Max_Count : constant := 4096.0; -- for 12-bit conversion resolution
 
-   procedure Send (TC : TC_Type := HK);
-   -- Send a telecommand
+   -----------------
+   -- Temperature --
+   -----------------
 
-private
-
-   ----------------------
-   -- MQTT definitions --
-   ----------------------
-   Connection_Param : constant Connection_Parameters :=
-     (Host => To_Unbounded_String ("acrux.dit.upm.es"),
-      Port => To_Unbounded_String ("8883"),
-      Client_ID => To_Unbounded_String ("AABBCC"),
-      Username => To_Unbounded_String ("antonio52"),
-      Password => To_Unbounded_String ("TFGantonio9"));
-   Subscribe_Param : constant Subscribe_Parameters :=
-     (Topic => To_Unbounded_String ("tc"),
-      QoS => Character'Val(16#00#),
-      Packet_ID => Character'Val(16#00#) & Character'Val(16#01#),
-      Expected_Message => To_Unbounded_String ("tc"));
-
-   Con_MQTT : Connection_MQTT;
-
-   ----------------------
-   -- Port definitions --
-   ----------------------
-
-   COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB0";
-
+   function Temperature
+     (R : Sensor_Reading)
+      return Temperature_Range
+   is
+      V : Float;
+      T : Float;
+   begin
+      V := Float(R)*V_Ref/Max_Count;   -- volts
+      T := (V - V_25C) / Scale + 25.0; -- degrees C
+      T := T + Calibration;
+      T := Float'Max (T, Min_Temp);
+      T := Float'Min (T, Max_Temp);
+      return Temperature_Range (T);
+   end Temperature;
 
    -----------
-   -- Tasks --
+   -- Light --
    -----------
 
-   task TM_Receiver
-     with Priority =>  System.Default_Priority;
-   -- replace with DMS priority when available
+   function Light
+     (R : Sensor_Reading)
+      return Light_Range
+   is
+   begin
+      return Light_Range (100.0*Float(R)/Max_Count);
+   end Light;
 
-   task TC_Sender
-     with Priority => System.Default_Priority;
-   -- replace with DMS priority when available
 
-end TTC;
+end HK_Data.Converter;

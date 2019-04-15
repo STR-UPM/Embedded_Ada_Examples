@@ -15,6 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- Author: Antonio Ramos Nieto (MQTTImage)
 -- String images of TTC messages
 
 with HK_Data;                 use HK_Data;
@@ -145,9 +146,9 @@ package body TTC_Data.Strings is
 
    end Image;
 
-   -----------
+   ---------------
    -- MQTTImage --
-   -----------
+   ---------------
 
    function MQTTImage (M : TM_Message) return String is
    begin

@@ -15,8 +15,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- Author: Antonio Ramos Nieto (MQTTImage)
 -- String images of TTC messages
-with HK_Data.TMP36;           use HK_Data.TMP36;
+
+with HK_Data.Converter;           use HK_Data.Converter;
 
 package TTC_Data.Strings is
 

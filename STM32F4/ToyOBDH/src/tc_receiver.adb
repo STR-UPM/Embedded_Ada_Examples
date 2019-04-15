@@ -1,4 +1,21 @@
+------------------------------------------------------------------------------
+--                                                                          --
+--          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid      --
+--                                                                          --
+-- This is free software;  you can redistribute it  and/or modify it  under --
+-- terms of the  GNU General Public License as published  by the Free Soft- --
+-- ware  Foundation;  either version 3,  or (at your option) any later ver- --
+-- sion.  This software is distributed in the hope  that it will be useful, --
+-- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
+-- TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General  Public  License  distributed  with  this  software;   see  file --
+-- COPYING3.  If not, go to http://www.gnu.org/licenses for a complete copy --
+-- of the license.                                                          --
+--                                                                          --
+------------------------------------------------------------------------------
 
+-- Author: Antonio Ramos Nieto
 
 with STM32.Device; use STM32.Device;
 with Serial_Ports; use Serial_Ports;
@@ -10,6 +27,10 @@ with STM32.Board;  use STM32.Board;
 
 package body TC_Receiver is
    
+   ------------------------
+   -- Serial definitions --
+   ------------------------
+   
    Peripheral : aliased Peripheral_Descriptor :=
      (Transceiver    => USART_1'Access,
       Transceiver_AF => GPIO_AF_USART1_7,
@@ -19,14 +40,13 @@ package body TC_Receiver is
    Port : aliased Serial_Port (Peripheral'Access);
    
 
-      
-
+   ----------------------
+   -- TC_Receiver_Task --
+   ----------------------
+   
    task body TC_Receiver_Task is
-     
    begin
-
       loop
-
          receive:
          begin
             declare
@@ -34,20 +54,14 @@ package body TC_Receiver is
                received : TC_Message := TC_Message'Input (Port'Access);
                pragma Warnings (On, "variable ""received"" is not referenced");
             begin
-               Green_LED.Toggle;
-               HK_TM.Send;
+               Green_LED.Toggle; --toggle the green led
+               HK_TM.Send; --send housekeeping message
             end;
          exception
             when others => delay until Clock + Milliseconds (100);
-               
-            
-            
          end receive;
       end loop;
-
-
    end TC_Receiver_Task;
-
 
    
 end TC_Receiver;
