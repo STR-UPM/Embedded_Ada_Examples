@@ -116,7 +116,7 @@ package body client_mqtt is
       else
          URL := "http://" & Parameters.Host & ":" & Parameters.Port;
       end if;
-      Ada.Text_IO.Put_Line (To_String(URL));
+      Ada.Text_IO.Put_Line ("Connecting to " & To_String(URL) & " ...");
       
       -- Open a TCP connection to the host
       Client.Create (This.Connection,To_String(URL),Persistent  => True);

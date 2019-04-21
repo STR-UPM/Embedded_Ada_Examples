@@ -17,7 +17,6 @@
 
 -- Author: Antonio Ramos Nieto
 
-with STM32.Device; use STM32.Device;
 with Serial_Ports; use Serial_Ports;
 with Ada.Real_Time; use Ada.Real_Time;
 with TTC_Data; use TTC_Data;
@@ -27,17 +26,6 @@ with STM32.Board;  use STM32.Board;
 
 package body TC_Receiver is
    
-   ------------------------
-   -- Serial definitions --
-   ------------------------
-   
-   Peripheral : aliased Peripheral_Descriptor :=
-     (Transceiver    => USART_1'Access,
-      Transceiver_AF => GPIO_AF_USART1_7,
-      Tx_Pin         => PB6,
-      Rx_Pin         => PB7);
-
-   Port : aliased Serial_Port (Peripheral'Access);
    
 
    ----------------------

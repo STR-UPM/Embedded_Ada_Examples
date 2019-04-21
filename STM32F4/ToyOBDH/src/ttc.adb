@@ -18,20 +18,11 @@
 --  The implementation of the TM package uses a serial interface
 --  to send telemetry messages to the ground station.
 
-with STM32.Device; use STM32.Device;
+with Ada.Real_Time; use Ada.Real_Time;
 with Serial_Ports; use Serial_Ports;
 
---  with HK_Data; use HK_Data;
 
 package body TTC is
-
-   Peripheral : aliased Peripheral_Descriptor :=
-     (Transceiver    => USART_1'Access,
-      Transceiver_AF => GPIO_AF_USART1_7,
-      Tx_Pin         => PB6,
-      Rx_Pin         => PB7);
-
-   Port : aliased Serial_Port (Peripheral'Access);
 
 
    -------------------------
@@ -57,6 +48,7 @@ package body TTC is
    procedure Initialize is
    begin
       Initialize (Port);
+      Set_Read_Timeout (Port, Milliseconds (1000));
       Configure (Port, Baud_Rate => 115_200);
    end Initialize;
 

@@ -108,10 +108,11 @@ package body TTC is
 
             end;
          exception
-            when E : others =>
+            when E: Ada.IO_Exceptions.End_Error =>
                null;
+            when E : others =>
                User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0,Data => (Value => (Temperature => 0, Light => 0) , Timestamp => 0 )  ));
-               --User_Interface.Put ("TM receive: " & Exception_Name (E));
+               User_Interface.Put ("TM receive: " & Exception_Name (E));
          end receive;
       end loop;
 

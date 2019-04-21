@@ -109,7 +109,16 @@ package body Serial_Ports is
                         Resistors      => Pull_Up);
 
       Configure_IO (Device_Pins, Configuration);
+      This.Initialized := True;
    end Initialize;
+
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized (This : Serial_Port) return Boolean is
+     (This.Initialized);
 
    ---------------
    -- Configure --
@@ -135,6 +144,18 @@ package body Serial_Ports is
 
       Enable (This.Device.Transceiver.all);
    end Configure;
+
+   ----------------------
+   -- Set_Read_Timeout --
+   ----------------------
+
+   procedure Set_Read_Timeout
+     (This : in out Serial_Port;
+      Wait : Time_Span := Time_Span_Last)
+   is
+   begin
+      This.Timeout := Wait;
+   end Set_Read_Timeout;
 
    ----------
    -- Read --
