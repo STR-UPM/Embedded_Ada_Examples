@@ -26,6 +26,7 @@ package TTC_Data is
    type TM_Type is (Basic, Housekeeping, Error);
    --  Basic TM contais the last sensor data
    --  Housekeeping TM contains an array with a log of recent sensor data
+   --  Error TM is used to show erroneous messages on screen
 
    type TM_Message is
       record

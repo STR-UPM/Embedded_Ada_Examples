@@ -1,6 +1,5 @@
 
 -- Shared project definitions
-with "aws";
 
 project Shared is
 

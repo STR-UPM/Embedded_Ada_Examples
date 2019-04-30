@@ -32,28 +32,17 @@
 --  Main procedure of toy ground station system - graphic interface version
 
 with TTC;
--- TheTM_Receiver package contains the telemetry reception subsystem
-
---with TC_Sender;
--- The GS_TC package contains the telecommand transmission subsystem
+-- The TTC package contains the telemetry/telecommand subsystem
 
 with User_Interface;              use User_Interface;
--- Graphic usser interface - based on gtkada
+-- Graphic user interface - based on gtkada
 
-pragma Warnings(Off);
-with System.IO;        -- for debugging purposes
-pragma Warnings(On);
+with GNAT.OS_Lib;
 
 procedure GS_Graphic is
 begin
-   pragma Debug(System.IO.Put_Line("--- GS start ---"));
-
-   -- initialize components
-   --TTC.Init;
    User_Interface.Init;
-
-   -- control returns here if the GUi window is closed
-   pragma Debug(System.IO.Put_Line("--- GS end ---"));
-
+   -- control returns here if the GUI window is closed
+   GNAT.OS_Lib.OS_Exit(0);
 end GS_Graphic;
 

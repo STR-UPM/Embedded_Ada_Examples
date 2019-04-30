@@ -29,7 +29,9 @@
 --                                                                          --
 -------------------------------------------------------------------------------
 
--- Partial implementation of Antonio Ramos Nieto
+-- Partial implementation by Antonio Ramos Nieto
+-- Adapted to MUSE lab by Juan A. de la Puente
+
 -- Implementation of TTC subsystem
 -- TTC messages are exchanged as streams on a serial interface
 
@@ -59,9 +61,9 @@ package body TTC is
    begin
       COM.Open (USB);
       COM.Set (Rate => B115200);
-      Con_MQTT.ConnectMQTT(Connection_Param);
-      delay (0.1);
-      Con_MQTT.SubscribeMQTT(Subscribe_Param);
+--        Con_MQTT.ConnectMQTT(Connection_Param);
+--        delay (0.1);
+--        Con_MQTT.SubscribeMQTT(Subscribe_Param);
    end Init;
 
    ----------
@@ -96,23 +98,22 @@ package body TTC is
                Message : TM_Message := TM_Message'Input (COM'Access);
             begin
                User_Interface.Put (Message);
-               if Message.Kind = Basic then
-                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("basic"),
-                                        Message => To_Unbounded_String(MQTTImage(Message)) ));
-
-               elsif Message.Kind = Housekeeping then
-                  Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("housekeeping"),
-                                        Message => To_Unbounded_String(MQTTImage(Message)) ));
-
-               end if;
-
+--                 if Message.Kind = Basic then
+--                    Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("basic"),
+--                                          Message => To_Unbounded_String(MQTTImage(Message)) ));
+--
+--                 elsif Message.Kind = Housekeeping then
+--                    Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("housekeeping"),
+--                                          Message => To_Unbounded_String(MQTTImage(Message)) ));
+--
+--                 end if;
             end;
          exception
             when E: Ada.IO_Exceptions.End_Error =>
                null;
             when E : others =>
-               User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0,Data => (Value => (Temperature => 0, Light => 0) , Timestamp => 0 )  ));
-               User_Interface.Put ("TM receive: " & Exception_Name (E));
+               User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0, Data => ((0,0),0)));
+               System.IO.Put_line ("TM " & Exception_Message (E));
          end receive;
       end loop;
 
@@ -129,7 +130,7 @@ package body TTC is
      Received : Boolean := False;
    begin
       loop
-         ReceivedMQTT(Received);
+         -- ReceivedMQTT(Received);
          if User_Interface.Send_TC or else Received then
             User_Interface.Send_TC := False;
             Send;

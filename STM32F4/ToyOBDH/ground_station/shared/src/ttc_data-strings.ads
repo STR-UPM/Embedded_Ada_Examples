@@ -23,6 +23,6 @@ with HK_Data.Converter;           use HK_Data.Converter;
 package TTC_Data.Strings is
 
    function Image (M : TM_Message) return String;
-   function MQTTImage (M : TM_Message) return String;
+   -- function MQTTImage (M : TM_Message) return String;
 
 end TTC_Data.Strings;
