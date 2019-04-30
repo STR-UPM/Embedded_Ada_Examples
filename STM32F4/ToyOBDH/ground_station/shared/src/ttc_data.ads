@@ -1,6 +1,5 @@
-------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--       Copyright (C) 2017-2019, Universidad Politécnica de Madrid         --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -33,7 +32,6 @@ package TTC_Data is
          Timestamp : Mission_Time;
          Kind      : TM_Type;
          Data      : Sensor_Data;
-
       end record;
 
    -- Telecommand

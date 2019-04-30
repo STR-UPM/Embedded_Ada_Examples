@@ -1,7 +1,6 @@
 # ToyGS
 
-Tiny mockup of a ground station for a satellite mission, running on a unix desktop or laptop computer. This system has been designed to be used in conjunction with a companion [tiny OBDH system](https://github.com/STR-UPM/ToyOBDH), running on an embedded computer (e.g. a Raspberry Pi). Both computers
-communicate through sockets on an internet connection.
+Tiny mockup of a ground station for a satellite mission, running on a unix desktop or laptop computer. This system has been designed to be used in conjunction with a companion [tiny OBDH system](https://github.com/STR-UPM/ToyOBDH), running on an embedded computer board. Both computers communicate through a serial data link.
 
 Building the software requires an Ada compiler. Compilers for Linux, MacOS, and Liubx systems can be dowloaded from the [AdaCore Community site](https://www.adacore.com/community). 
 
