@@ -122,7 +122,7 @@ package body TTC_Data.Strings is
                TM_String : String :=
                  Image(Clock, "%T") & " TM " &
                  " ********* " &
-                 " **** ";
+                 " **** " & LF;
             begin
                return TM_String;
             end;

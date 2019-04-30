@@ -50,8 +50,8 @@ package body TTC is
    -- Port definitions --
    ----------------------
 
-   COM : aliased Serial_Port;
-   USB : constant Port_Name := "/dev/ttyUSB1";
+   COM : aliased Serial_Port; -- stream
+   USB : constant Port_Name := "/dev/ttyUSB0";
 
    ----------
    -- Init --
@@ -60,16 +60,23 @@ package body TTC is
    procedure Init is
    begin
       COM.Open (USB);
-      COM.Set (Rate => B115200, Block => True);
-   end Init;
+      COM.Set (Rate => B115200);
+      -- COM.Set (Rate => B115200, Block => True);
+  end Init;
 
    ----------
    -- Send --
    ----------
 
    procedure Send (TC : TC_Type := HK) is
+      Message : TC_Message(TC);
    begin
-      null;
+      Message.Timestamp := 0;
+      System.IO.Put_Line("TC->");
+      TC_Message'Output (COM'Access, Message);
+   exception
+      when E : others =>
+         pragma Debug (System.IO.Put_Line ("TC error: " & Exception_Message(E)));
    end Send;
 
    -----------------
@@ -93,7 +100,7 @@ package body TTC is
          exception
             when E : others =>
                User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0));
-               --User_Interface.Put ("TM receive: " & Exception_Name (E));
+               pragma Debug (System.IO.Put_Line ("TM error: " & Exception_Message(E)));
          end receive;
       end loop;
 
@@ -111,15 +118,7 @@ package body TTC is
 
       loop
          delay 30.0;
-
-         send:
-         declare
-            Message : TC_Message := (Kind => HK, Timestamp => 0);
-         begin
-            System.IO.Put_Line("Send TC");
-            TC_Message'Output (COM'Access, Message);
-         end send;
-
+         Send(HK);
       end loop;
 
    exception

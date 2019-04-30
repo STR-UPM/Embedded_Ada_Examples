@@ -45,6 +45,7 @@ with Gtk.Scrolled_Window; use Gtk.Scrolled_Window;
 with Gtk.Widget;          use Gtk.Widget;
 with Pango.Font;          use Pango.Font;
 
+--with TTC;
 with TTC_Data.Strings;
 
 package body User_Interface is
@@ -76,7 +77,7 @@ package body User_Interface is
    procedure button_clicked(Self : access Gtk_Button_Record'Class) is
    begin
       null;
-     -- TC_Sender.Send;
+     -- TTC.Send;
    end button_clicked;
 
    ----------
