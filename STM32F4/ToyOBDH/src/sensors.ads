@@ -16,6 +16,8 @@
 ------------------------------------------------------------------------------
 
 --  Author: Antonio Ramos Nieto
+--  Modified for MUSE lab by Juan A. de la Puente
+
 --  This package provides an abstraction layer for the sensor device.
 
 with HK_Data;  use HK_Data;
@@ -25,9 +27,9 @@ with HAL;          use HAL;
 with STM32.GPIO;   use STM32.GPIO;
 with STM32.Device; use STM32.Device;
 
-package Sensor is  -- passive
+package Sensors is  -- passive
 
-    type Sensor is tagged private;
+   type Sensor is tagged private;
 
    procedure Initialize
      (This          : in out Sensor;
@@ -38,7 +40,6 @@ package Sensor is  -- passive
                   Reading : out Sensor_Reading);
    --  Get the sensor raw reading (0..4095)
 
-
 private
 
    type Sensor is tagged record
@@ -46,4 +47,4 @@ private
      Input_Point   : GPIO_Point;
    end record;
 
-end Sensor;
+end Sensors;

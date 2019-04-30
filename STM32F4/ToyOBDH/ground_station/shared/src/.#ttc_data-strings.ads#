@@ -15,30 +15,13 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Data types for the TTC subsystem.
+-- String images of TTC messages
 
-with HK_Data;       use HK_Data;
+with HK_Data.Converter;           use HK_Data.Converter;
 
-package TTC_Data is
+package TTC_Data.Strings is
 
-   type TM_Type is (Basic, Housekeeping, Error);
-   --  Basic TM contais the last sensor data
-   --  Housekeeping TM contains an array with a log of recent sensor data
+   function Image (M : TM_Message) return String;
+   -- function MQTTImage (M : TM_Message) return String;
 
-   type TM_Message is
-      record
-         Timestamp : Mission_Time;
-         Kind      : TM_Type;
-         Data      : Sensor_Data;
-      end record;
-   -- Telecommand
-
-   type TC_Type is (HK);
-   -- HK TC requests a housekeeping TM to be sent to ground
-
-   type TC_Message(Kind : TC_Type) is
-      record
-         Timestamp : Mission_Time;
-      end record;
-
-end TTC_Data;
+end TTC_Data.Strings;

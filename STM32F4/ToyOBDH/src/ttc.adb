@@ -21,16 +21,13 @@
 with Ada.Real_Time; use Ada.Real_Time;
 with Serial_Ports; use Serial_Ports;
 
-
 package body TTC is
-
 
    -------------------------
    -- Internal procedures --
    -------------------------
 
    procedure Initialize;
-
 
    ----------
    -- Send --

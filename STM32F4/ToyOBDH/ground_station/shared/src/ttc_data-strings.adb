@@ -16,6 +16,8 @@
 ------------------------------------------------------------------------------
 
 -- Author: Antonio Ramos Nieto (MQTTImage)
+-- Modified for MUSE lab by Juan A. de la Puente
+
 -- String images of TTC messages
 
 with HK_Data;                 use HK_Data;
@@ -61,12 +63,6 @@ package body TTC_Data.Strings is
    function Temperature_Range_Format is
      new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
 
-   package Light_Range_IO is
-      new Float_IO (Light_Range);
-
-   function Light_Range_Format is
-      new Flt_Format (Light_Range, Light_Range_IO.Put);
-
    ---------------------
    -- Image functions --
    ---------------------
@@ -86,11 +82,6 @@ package body TTC_Data.Strings is
       return -Temperature_Range_Format (+(" %4.1f C "), T);
    end Image;
 
-   function Image (L : Light_Range) return String is
-   begin
-      return -Light_Range_Format (+(" %4.1f"), L) & " %";
-   end Image;
-
    -----------
    -- Image --
    -----------
@@ -104,10 +95,8 @@ package body TTC_Data.Strings is
                TM_String : String :=
                  Image(Clock, "%T") & " TM " &
                  Image(M.Data.Timestamp) &
-                 Image(M.Data.Value.Temperature) &
-                 Image(Temperature(M.Data.Value.Temperature)); --&
---                   Image(M.Data.Value.Light) &
---                   Image(Light(M.Data.Value.Light)) ;
+                 Image(M.Data.Readings.Temperature) &
+                 Image(Temperature(M.Data.Readings.Temperature));
             begin
                return TM_String;
             end;
@@ -119,10 +108,8 @@ package body TTC_Data.Strings is
                Set_Bounded_String (TM_String, Image(Clock, "%T") &
                                      "  HK" &
                                      Image(M.Data.Timestamp) &
-                                     Image(M.Data.Value.Temperature) &
-                                     Image(Temperature(M.Data.Value.Temperature))); --&
---                                       Image(M.Data.Value.Light) &
---                                       Image(Light(M.Data.Value.Light))) ;
+                                     Image(M.Data.Readings.Temperature) &
+                                     Image(Temperature(M.Data.Readings.Temperature)));
                return To_String (TM_String);
             end;
 
@@ -139,24 +126,5 @@ package body TTC_Data.Strings is
       end case;
 
    end Image;
-
---     ---------------
---     -- MQTTImage --
---     ---------------
---
---     function MQTTImage (M : TM_Message) return String is
---     begin
---        declare
---           TM_String : String :=
---             Image(M.Data.Timestamp) &
---             "," &
---             Image(Temperature(M.Data.Value.Temperature)) &
---             "," &
---             Image(Light(M.Data.Value.Light)) ;
---        begin
---           return TM_String;
---        end;
---
---     end MQTTImage;
 
 end TTC_Data.Strings;

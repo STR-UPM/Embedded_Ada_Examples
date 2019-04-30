@@ -98,21 +98,14 @@ package body TTC is
                Message : TM_Message := TM_Message'Input (COM'Access);
             begin
                User_Interface.Put (Message);
---                 if Message.Kind = Basic then
---                    Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("basic"),
---                                          Message => To_Unbounded_String(MQTTImage(Message)) ));
---
---                 elsif Message.Kind = Housekeeping then
---                    Con_MQTT.PublishMQTT((Topic => To_Unbounded_String("housekeeping"),
---                                          Message => To_Unbounded_String(MQTTImage(Message)) ));
---
---                 end if;
             end;
          exception
             when E: Ada.IO_Exceptions.End_Error =>
                null;
             when E : others =>
-               User_Interface.Put (TM_Message'(Kind =>Error, Timestamp => 0, Data => ((0,0),0)));
+               User_Interface.Put (TM_Message'(Kind =>Error,
+                                               Timestamp => 0,
+                                               Data => ((Temperature => 0),0)));
                System.IO.Put_line ("TM " & Exception_Message (E));
          end receive;
       end loop;
@@ -129,8 +122,8 @@ package body TTC is
    task body TC_Sender is
      Received : Boolean := False;
    begin
+
       loop
-         -- ReceivedMQTT(Received);
          if User_Interface.Send_TC or else Received then
             User_Interface.Send_TC := False;
             Send;
@@ -142,7 +135,5 @@ package body TTC is
       when E : others =>
          User_Interface.Put ("TC " & Exception_Information (E));
    end TC_Sender;
-
-
 
 end TTC;

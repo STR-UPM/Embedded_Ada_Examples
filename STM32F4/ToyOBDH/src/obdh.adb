@@ -15,7 +15,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Partial implementation of Antonio Ramos Nieto
+--  Partial implementation by Antonio Ramos Nieto
+-- Adapted to MUSE lab by Juan A. de la Puente
+
 --  This is the main procedure for the toy_obdh example.
 
 with Housekeeping;  pragma Unreferenced (Housekeeping);

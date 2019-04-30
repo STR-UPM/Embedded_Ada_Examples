@@ -16,30 +16,29 @@
 ------------------------------------------------------------------------------
 
 -- partial implementation of Antonio Ramos Nieto
+-- adapted to MUSE lab by Juan A. de la Puente
 
-with HK_Data; use HK_Data;
+with HK_Data;       use HK_Data;
 
-with Sensor; use Sensor;
+with Sensors;       use Sensors;
 with Storage;
 
 with Ada.Real_Time; use Ada.Real_Time;
-with STM32.Device; use STM32.Device;
-with STM32.GPIO;   use STM32.GPIO;
-
+with STM32.Device;  use STM32.Device;
+with STM32.GPIO;    use STM32.GPIO;
 
 package body Housekeeping is
 
-      --  ADC parameters
+   --  Sensors
 
-   Temperature_Sensor : Sensor.Sensor;
-   Light_Sensor : Sensor.Sensor;
+   Temperature_Sensor : Sensor;
 
    -------------------------
    -- Internal operations --
    -------------------------
 
    procedure Read_Data;
-   --  Read a value from a temperature sensor
+   --  Read values from all sensors
 
    ----------------------------
    -- Housekeeping task body --
@@ -60,20 +59,18 @@ package body Housekeeping is
    ----------
 
    procedure Read_Data is
-      Output : Sensors_Output;
-      Data   : Sensor_Data;
-      SC     : Seconds_Count;
-      TS     : Time_Span;
+      Readings : Sensor_Readings;
+      Data     : Sensor_Data;
+      SC       : Seconds_Count;
+      TS       : Time_Span;
    begin
-      Temperature_Sensor.Get (Output.Temperature);
-      Light_Sensor.Get (Output.Light);
+      Temperature_Sensor.Get (Readings.Temperature);
       Split (Clock, SC, TS);
-      Data := (Value => Output, Timestamp => Mission_Time (SC));
+      Data := Sensor_Data'(Readings  => Readings,
+                           Timestamp => Mission_Time (SC));
       Storage.Put (Data);
    end Read_Data;
 
 begin
       Temperature_Sensor.Initialize(5,PA5);
-      Light_Sensor.Initialize(3,PA3);
-
 end Housekeeping;

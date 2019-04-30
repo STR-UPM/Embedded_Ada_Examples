@@ -16,11 +16,9 @@
 ------------------------------------------------------------------------------
 
 with TTC;
-with TTC_Data;           use TTC_Data;
-with HK_Data;            use HK_Data;
+with TTC_Data;  use TTC_Data;
+with HK_Data;   use HK_Data;
 with Storage;
-
---  with HK_TM; -- quitar
 
 with Ada.Real_Time;      use Ada.Real_Time;
 

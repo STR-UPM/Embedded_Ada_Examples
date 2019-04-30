@@ -16,6 +16,8 @@
 ------------------------------------------------------------------------------
 
 --  Author: Antonio Ramos Nieto (Sensors_Output, Sensor_Data)
+--  Modified for MUSE lab by Juan A. de la Puente
+
 --  Data types for the housekeeping subsystem
 
 with HAL;            use HAL;
@@ -27,22 +29,21 @@ package HK_Data is
    --  To be converted to engineering units on ground.
    --  Range is 0 .. 4095 (12 bit ADC) for 3 V reference voltage.
 
-   type Sensors_Output is record
+   type Sensor_Readings is record
       Temperature : Sensor_Reading;
-      Light       : Sensor_Reading;
    end record;
-   --  Sensor reading of temperature and ligth sensors.
+   --  Sensor readings for all sensors.
 
    type Mission_Time is new UInt64;
    --  Mission time in seconds
 
    type Sensor_Data is
       record
-         Value     : Sensors_Output;
+         Readings  : Sensor_Readings;
          Timestamp : Mission_Time;
       end record
      with Pack;
-   --  Sensor reading with timestamp
+   --  Sensor readings with timestamp
 
    HK_Log_Length : constant Positive := 5;
    --  Length of housekeeping data log to be sent to ground

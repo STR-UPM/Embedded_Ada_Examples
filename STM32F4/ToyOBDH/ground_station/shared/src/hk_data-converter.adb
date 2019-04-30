@@ -30,8 +30,7 @@
 -------------------------------------------------------------------------------
 
 -- Author: Antonio Ramos Nieto (Light)
--- Converts temperature and light values
-
+-- Modifed for MUSE lab by Juan A. de la Puente
 
 package body HK_Data.Converter is
 
@@ -62,18 +61,5 @@ package body HK_Data.Converter is
       T := Float'Min (T, Max_Temp);
       return Temperature_Range (T);
    end Temperature;
-
-   -----------
-   -- Light --
-   -----------
-
-   function Light
-     (R : Sensor_Reading)
-      return Light_Range
-   is
-   begin
-      return Light_Range (100.0*Float(R)/Max_Count);
-   end Light;
-
 
 end HK_Data.Converter;

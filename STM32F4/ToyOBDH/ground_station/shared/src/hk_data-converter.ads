@@ -15,18 +15,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Author: Antonio Ramos Nieto (Light)
+-- Convert sensor readings to engineering units
+
 -- TMP36 temperature sensor reading
 -- See TMP35/TMP36/TMP37 datasheet
 
 package HK_Data.Converter is
 
    type Temperature_Range is digits 5 range -40.0 .. +125.0;
-   type Light_Range is digits 5 range 0.0 .. 100.0;
 
    function Temperature (R : Sensor_Reading) return Temperature_Range
-     with Inline;
-   function Light (R : Sensor_Reading) return Light_Range
      with Inline;
 
 end HK_Data.Converter;

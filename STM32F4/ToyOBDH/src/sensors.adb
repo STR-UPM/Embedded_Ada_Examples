@@ -16,6 +16,8 @@
 ------------------------------------------------------------------------------
 
 --  Author: Antonio Ramos Nieto
+--  Modified for MUSE lab by Juan A. de la Puente
+
 --  Temperature sensor implementation.
 
 --  This version is for a TMP36 sensor connected to GPIO pin 5 of
@@ -23,12 +25,11 @@
 --  mapping in STM32.ADC.
 
 
-package body Sensor is
+package body Sensors is
 
    Converter : Analog_To_Digital_Converter renames ADC_1;
 
    --  Local subprograms
-
 
    ----------------
    -- Initialize --
@@ -38,13 +39,9 @@ package body Sensor is
      (This          : in out Sensor;
       Input_Channel : in Analog_Input_Channel;
       Input_Point   : in GPIO_Point) is
-
-
    begin
       This.Input_Channel := Input_Channel;
       This.Input_Point := Input_Point;
-
-
    end Initialize;
 
    --------------------
@@ -59,6 +56,7 @@ package body Sensor is
                Sample_Time => Sample_144_Cycles));  -- needs 10 us minimum
 
       Successful : Boolean;
+
    begin
 
       --Initialize converters
@@ -85,7 +83,7 @@ package body Sensor is
          Enable_EOC  => True,
          Conversions => All_Regular_Conversions);
 
-
+      -- Read value
       Enable (Converter);
       Start_Conversion (Converter);
       Poll_For_Status (Converter,
@@ -101,4 +99,4 @@ package body Sensor is
       end if;
    end Get;
 
-end Sensor;
+end Sensors;

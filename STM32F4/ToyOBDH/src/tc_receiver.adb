@@ -26,8 +26,6 @@ with STM32.Board;  use STM32.Board;
 
 package body TC_Receiver is
    
-   
-
    ----------------------
    -- TC_Receiver_Task --
    ----------------------
@@ -38,9 +36,9 @@ package body TC_Receiver is
          receive:
          begin
             declare
-               pragma Warnings (Off, "variable ""received"" is not referenced"); -- Just to remove warning when building
+               pragma Warnings (Off); -- Just to remove warning when building
                received : TC_Message := TC_Message'Input (Port'Access);
-               pragma Warnings (On, "variable ""received"" is not referenced");
+               pragma Warnings (On);
             begin
                Green_LED.Toggle; --toggle the green led
                HK_TM.Send; --send housekeeping message

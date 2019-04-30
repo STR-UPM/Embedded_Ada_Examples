@@ -41,8 +41,6 @@ with Ada.Real_Time;    use Ada.Real_Time;
 with System;
 with GNAT.Serial_Communications; use GNAT.Serial_Communications;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
---with AWS.Client;
---with client_mqtt; use client_mqtt;
 
 package TTC is
 
@@ -53,23 +51,6 @@ package TTC is
    -- Send a telecommand
 
 private
-
-   ----------------------
-   -- MQTT definitions --
-   ----------------------
---     Connection_Param : constant Connection_Parameters :=
---       (Host => To_Unbounded_String ("acrux.dit.upm.es"),
---        Port => To_Unbounded_String ("8883"),
---        Client_ID => To_Unbounded_String ("AABBCC"),
---        Username => To_Unbounded_String ("antonio52"),
---        Password => To_Unbounded_String ("TFGantonio9"));
---     Subscribe_Param : constant Subscribe_Parameters :=
---       (Topic => To_Unbounded_String ("tc"),
---        QoS => Character'Val(16#00#),
---        Packet_ID => Character'Val(16#00#) & Character'Val(16#01#),
---        Expected_Message => To_Unbounded_String ("tc"));
---
---     Con_MQTT : Connection_MQTT;
 
    ----------------------
    -- Port definitions --

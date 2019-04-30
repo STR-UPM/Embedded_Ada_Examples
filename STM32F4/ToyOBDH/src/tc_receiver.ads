@@ -17,7 +17,6 @@
 
 -- Author: Antonio Ramos Nieto
 
-
 --  Checks received messages via serial
 package TC_Receiver is
 
