@@ -58,7 +58,7 @@ package body TTC_Data.Strings is
      new Mod_Format (Sensor_Reading, Sensor_Reading_IO.Put);
 
    package Temperature_Range_IO is
-      new Float_IO (Temperature_Range);
+     new Float_IO (Temperature_Range);
 
    function Temperature_Range_Format is
      new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
@@ -106,7 +106,7 @@ package body TTC_Data.Strings is
                TM_String : Bounded_String;
             begin
                Set_Bounded_String (TM_String, Image(Clock, "%T") &
-                                     "  HK" &
+                                     " >HK" &
                                      Image(M.Data.Timestamp) &
                                      Image(M.Data.Readings.Temperature) &
                                      Image(Temperature(M.Data.Readings.Temperature)));
