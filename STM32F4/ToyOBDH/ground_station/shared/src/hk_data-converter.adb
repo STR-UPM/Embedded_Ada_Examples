@@ -1,4 +1,4 @@
---                                                                          --
+---                                                                          --
 --       Copyright (C) 2017-2019, Universidad Politécnica de Madrid         --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
@@ -14,34 +14,34 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Data types for the TTC subsystem.
+package body HK_Data.Converter is
 
-with HK_Data;       use HK_Data;
+   V_Ref       : constant := 2.930; -- V (measured value)
+   V_25C       : constant := 0.750; -- V
+   Scale       : constant := 0.010; -- V/C
+   Calibration : constant := -1.0;  -- C (experimental calibration)
 
-package TTC_Data is
+   Min_Temp  : constant := Temperature_Range'First;
+   Max_Temp  : constant := Temperature_Range'Last;
+   Max_Count : constant := 4096.0; -- for 12-bit conversion resolution
 
-   -- Telemetry
+   -----------------
+   -- Temperature --
+   -----------------
 
-   type TM_Type is (Basic, Housekeeping, Error);
-   --  Basic TM contais the last sensor data
-   --  Housekeeping TM contains an array with a log of recent sensor data
-   --  Error TM is used to show erroneous messages on screen
+   function Temperature
+     (R : Sensor_Reading)
+      return Temperature_Range
+   is
+      V : Float;
+      T : Float;
+   begin
+      V := Float(R)*V_Ref/Max_Count;   -- volts
+      T := (V - V_25C) / Scale + 25.0; -- degrees C
+      T := T + Calibration;
+      T := Float'Max (T, Min_Temp);
+      T := Float'Min (T, Max_Temp);
+      return Temperature_Range (T);
+   end Temperature;
 
-   type TM_Message is
-      record
-         Timestamp : Mission_Time;
-         Kind      : TM_Type;
-         Data      : Sensor_Data;
-      end record;
-
-   -- Telecommand
-
-   type TC_Type is (HK);
-   -- HK TC requests a housekeeping TM to be sent to ground
-
-   type TC_Message(Kind : TC_Type) is
-      record
-         Timestamp : Mission_Time;
-      end record;
-
-end TTC_Data;
+end HK_Data.Converter;

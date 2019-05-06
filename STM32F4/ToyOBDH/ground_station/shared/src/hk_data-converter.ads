@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--       Copyright (C) 2017-2019, Universidad Politécnica de Madrid         --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,14 +15,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+-- Convert sensor readings to engineering units
+
 -- TMP36 temperature sensor reading
 -- See TMP35/TMP36/TMP37 datasheet
 
-package HK_Data.TMP36 is
+package HK_Data.Converter is
 
    type Temperature_Range is digits 5 range -40.0 .. +125.0;
 
    function Temperature (R : Sensor_Reading) return Temperature_Range
      with Inline;
 
-end HK_Data.TMP36;
+end HK_Data.Converter;

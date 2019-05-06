@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -21,19 +21,24 @@ with HK_Data;       use HK_Data;
 
 package TTC_Data is
 
-   type TM_Type is (Basic, Housekeeping);
+   type TM_Type is (Basic, Housekeeping, Error);
    --  Basic TM contais the last sensor data
    --  Housekeeping TM contains an array with a log of recent sensor data
 
-   type TM_Message (Kind : TM_Type) is
+   type TM_Message is
       record
          Timestamp : Mission_Time;
-         case Kind is
-            when Basic =>
-               Data      : Sensor_Data;
-            when Housekeeping =>
-               Data_Log  : HK_Log;
-         end case;
+         Kind      : TM_Type;
+         Data      : Sensor_Data;
+      end record;
+   -- Telecommand
+
+   type TC_Type is (HK);
+   -- HK TC requests a housekeeping TM to be sent to ground
+
+   type TC_Message(Kind : TC_Type) is
+      record
+         Timestamp : Mission_Time;
       end record;
 
 end TTC_Data;

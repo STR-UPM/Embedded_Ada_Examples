@@ -16,11 +16,11 @@
 ------------------------------------------------------------------------------
 
 with TTC;
-with TTC_Data;           use TTC_Data;
-with HK_Data;            use HK_Data;
+with TTC_Data;      use TTC_Data;
+with HK_Data;       use HK_Data;
 with Storage;
 
-with Ada.Real_Time;      use Ada.Real_Time;
+with Ada.Real_Time; use Ada.Real_Time;
 
 package body HK_TM is
 
@@ -74,22 +74,21 @@ package body HK_TM is
    ---------------------
 
    procedure Send_TM_Message is
-      Message  : TM_Message (Housekeeping);
+      Message  : TM_Message;
       SC       : Seconds_Count;
       TS       : Time_Span;
       Data     : Sensor_Data;
    begin
-      Split (Clock, SC, TS);
-      Message.Timestamp := Mission_Time (SC);
-      for I in Message.Data_Log'Range loop
+      for I in HK_Log'Range loop
          if not Storage.Empty then
+            Split (Clock, SC, TS);
+            Message.Kind      := Housekeeping;
+            Message.Timestamp := Mission_Time (SC);
             Storage.Get (Data);
-            Message.Data_Log (I) := Data;
-         else
-            Message.Data_Log (I) := (Value => 0, Timestamp => 0);
+            Message.Data := Data;
+            TTC.Send (Message);
          end if;
       end loop;
-      TTC.Send (Message);
    end Send_TM_Message;
 
 end HK_TM;

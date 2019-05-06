@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -16,6 +16,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Streams;   use Ada.Streams;
+with STM32.Board;  use STM32.Board;
 
 package body Serial_Ports is
 
@@ -97,6 +98,7 @@ package body Serial_Ports is
       Device_Pins   : constant GPIO_Points
         := This.Device.Rx_Pin & This.Device.Tx_Pin;
    begin
+      Initialize_LEDs;
       Enable_Clock (Device_Pins);
       Enable_Clock (This.Device.Transceiver.all);
 
@@ -107,7 +109,16 @@ package body Serial_Ports is
                         Resistors      => Pull_Up);
 
       Configure_IO (Device_Pins, Configuration);
+      This.Initialized := True;
    end Initialize;
+
+
+   -----------------
+   -- Initialized --
+   -----------------
+
+   function Initialized (This : Serial_Port) return Boolean is
+     (This.Initialized);
 
    ---------------
    -- Configure --
@@ -133,6 +144,18 @@ package body Serial_Ports is
 
       Enable (This.Device.Transceiver.all);
    end Configure;
+
+   ----------------------
+   -- Set_Read_Timeout --
+   ----------------------
+
+   procedure Set_Read_Timeout
+     (This : in out Serial_Port;
+      Wait : Time_Span := Time_Span_Last)
+   is
+   begin
+      This.Timeout := Wait;
+   end Set_Read_Timeout;
 
    ----------
    -- Read --
@@ -167,9 +190,11 @@ package body Serial_Ports is
    is
    begin
       for Next of Buffer loop
+         Red_LED.Toggle;
          Await_Send_Ready (This.Device.Transceiver.all);
          Transmit (This.Device.Transceiver.all, Stream_Element'Pos (Next));
       end loop;
+      Red_LED.Toggle;
    end Write;
 
 end Serial_Ports;

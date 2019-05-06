@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid      --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,20 +15,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- TMP36 temperature sensor reading
+--  Check received messages via serial port
+package TC_Receiver is
 
-package HK_Data.TMP35 is
+   -- Test periodically received messages
+   task TC_Receiver_Task;
 
-   type Temperature_Range is delta 0.01 range 10.0 .. 125.0;
-
-   function Temperature (R : Sensor_Reading) return Temperature_Range
-     with Inline;
-
-private
-   -- See TMP35/TMP36/TMP37 datasheet
-
-   V_Ref : constant := 3.300; -- V
-   V_25C : constant := 0.250; --V
-   Scale : constant := 0.010; -- V/C
-
-end HK_Data.TMP35;
+end TC_Receiver;

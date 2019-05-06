@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,47 +15,45 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Temperature sensor implementation.
+-- This implementation uses the ADC_1 converter in the STM32 device
 
---  This version is for a TMP36 sensor connected to GPIO pin 5 of
---  the F429 Discovery Board. See the board user manual and the
---  mapping in STM32.ADC.
+package body Sensors is
 
-with STM32.Board;  use STM32.Board;
-with STM32.Device; use STM32.Device;
-
-with HAL;          use HAL;
-with STM32.ADC;    use STM32.ADC;
-with STM32.GPIO;   use STM32.GPIO;
-
-package body Sensor is
-
-   --  ADC parameters
-
-   Converter     : Analog_To_Digital_Converter renames ADC_1;
-   Input_Channel : constant Analog_Input_Channel := 5;
-   Input         : constant GPIO_Point := PA5;
+   Converter : Analog_To_Digital_Converter renames ADC_1;
 
    --  Local subprograms
-
-   procedure Initialize;
 
    ----------------
    -- Initialize --
    ----------------
 
-   procedure Initialize is
+   procedure Initialize
+     (This          : in out Sensor;
+      Input_Channel : in Analog_Input_Channel;
+      Input_Point   : in GPIO_Point) is
+   begin
+      This.Input_Channel := Input_Channel;
+      This.Input_Point := Input_Point;
+   end Initialize;
+
+   ---------
+   -- Get --
+   ---------
+
+   procedure Get (This    : in Sensor;
+                  Reading : out Sensor_Reading) is
 
       All_Regular_Conversions : constant Regular_Channel_Conversions :=
-        (1 => (Channel     => Input_Channel,
+        (1 => (Channel     => This.Input_Channel,
                Sample_Time => Sample_144_Cycles));  -- needs 10 us minimum
 
+      Successful : Boolean;
+
    begin
-      Initialize_LEDs;
 
-      Enable_Clock (Input);
-      Configure_IO (Input, (Mode => Mode_Analog, Resistors => Floating));
-
+      --Initialize converters
+      Enable_Clock (This.Input_Point);
+      Configure_IO (This.Input_Point, (Mode => Mode_Analog, Resistors => Floating));
       Enable_Clock (Converter);
       Reset_All_ADC_Units;
 
@@ -77,30 +75,20 @@ package body Sensor is
          Enable_EOC  => True,
          Conversions => All_Regular_Conversions);
 
+      -- Read value
       Enable (Converter);
-
-   end Initialize;
-
-   ---------
-   -- Get --
-   ---------
-
-   procedure Get (Reading : out Sensor_Reading) is
-      Successful : Boolean;
-   begin
       Start_Conversion (Converter);
       Poll_For_Status (Converter,
                        Regular_Channel_Conversion_Complete,
                        Successful);
+      Poll_For_Status (Converter,
+                       Regular_Channel_Conversion_Complete,
+                       Successful);
       if not Successful then
-         Red_LED.Toggle;
          Reading := 0;
       else
-         Green_LED.Toggle;
-         Reading := Sensor_Reading (Conversion_Value (Converter));
+         Reading:= Sensor_Reading (Conversion_Value (Converter)); -- read sensor
       end if;
    end Get;
 
-begin
-   Initialize;
-end Sensor;
+end Sensors;

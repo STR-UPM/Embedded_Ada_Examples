@@ -20,6 +20,8 @@ The examples make use of the [Ada Drivers Library](https://github.com/AdaCore/Ad
 
 * **Temperature** - Read the temperature sensor in the STM32F4 MCU and display the value in degrees Celsius.
 
+* **Toy OBDH** - Tiny mockup of a satellite On-Board Data Handling System. The software reads an external sensor and sends telemetry messages to a simulated ground station running on a laptop computer,
+
 ## License
 
 All the files reproduced or adapted from AdaCore sources are included here under the original license, in most cases the GNU Public License (GPL) or, in some cases, a 3-clause Berkeley Software Distribution (BSD). Source files developed at UPM are under similar licences. See the source files for the details. 
@@ -32,8 +34,8 @@ All the contents of this site is provided in the hope that it will be useful, bu
 
 The compilation system can be dowloaded from the [AdaCore Community site](https://www.adacore.com/community). The version used in the following is *GNAT Community 2018 ARM-ELF*. If you have been using previous versions of GNAT GPL you should take into account that some directories are now located at different places in the directory tree. You will also need to install a native GNAT compiler for your host platform. The following host platforms have been used by the developers:
 
-* Linux Ubuntu 16.04
-* MacOS 10.13 High Sierra
+* Linux Ubuntu 18.04
+* MacOS 10.14 Mojave
 * Windows 10
 
 Follow the installation instructions to setup the compiler. Let `<GNAT>` denote the installation root for the  GNAT compilation system. 

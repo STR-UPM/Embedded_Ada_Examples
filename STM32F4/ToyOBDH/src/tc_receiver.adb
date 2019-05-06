@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad Politécnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid      --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,40 +15,36 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  The implementation of the TM package uses a serial interface
---  to send telemetry messages to the ground station.
-
-with Ada.Real_Time; use Ada.Real_Time;
 with Serial_Ports; use Serial_Ports;
+with Ada.Real_Time; use Ada.Real_Time;
+with TTC_Data; use TTC_Data;
+with HK_TM; 
+with STM32.Board;  use STM32.Board;
 
-package body TTC is
 
-   -------------------------
-   -- Internal procedures --
-   -------------------------
-
-   procedure Initialize;
-
-   ----------
-   -- Send --
-   ----------
-
-   procedure Send (TM : TM_Message) is
+package body TC_Receiver is
+   
+   ----------------------
+   -- TC_Receiver_Task --
+   ----------------------
+   
+   task body TC_Receiver_Task is
    begin
-      TM_Message'Output (Port'Access, TM);
-   end Send;
+      loop
+         receive:
+         begin
+            declare
+               pragma Warnings (Off); -- Just to remove warning when building
+               received : TC_Message := TC_Message'Input (Port'Access);
+               pragma Warnings (On);
+            begin
+               Green_LED.Toggle; --toggle the green led
+               HK_TM.Send; --send housekeeping message
+            end;
+         exception
+            when others => delay until Clock + Milliseconds (100);
+         end receive;
+      end loop;
+   end TC_Receiver_Task;
 
-   ----------------
-   -- Initialize --
-   ----------------
-
-   procedure Initialize is
-   begin
-      Initialize (Port);
-      Set_Read_Timeout (Port, Milliseconds (1000));
-      Configure (Port, Baud_Rate => 115_200);
-   end Initialize;
-
-begin
-   Initialize;
-end TTC;
+end TC_Receiver;

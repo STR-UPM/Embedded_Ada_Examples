@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -17,7 +17,7 @@
 
 --  Data types for the housekeeping subsystem
 
-with HAL;            use HAL;
+with HAL; use HAL;
 
 package HK_Data is
 
@@ -26,16 +26,21 @@ package HK_Data is
    --  To be converted to engineering units on ground.
    --  Range is 0 .. 4095 (12 bit ADC) for 3 V reference voltage.
 
+   type Sensor_Readings is record
+      Temperature : Sensor_Reading;
+   end record;
+   --  Sensor readings for all sensors.
+
    type Mission_Time is new UInt64;
    --  Mission time in seconds
 
    type Sensor_Data is
       record
-         Value     : Sensor_Reading;
+         Readings  : Sensor_Readings;
          Timestamp : Mission_Time;
       end record
      with Pack;
-   --  Sensor reading with timestamp
+   --  Sensor readings with timestamp
 
    HK_Log_Length : constant Positive := 5;
    --  Length of housekeeping data log to be sent to ground

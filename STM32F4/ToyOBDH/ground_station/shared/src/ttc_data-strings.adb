@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--       Copyright (C) 2017-2019, Universidad Politécnica de Madrid         --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -18,7 +18,6 @@
 -- String images of TTC messages
 
 with HK_Data;                 use HK_Data;
-with HK_Data.TMP36;           use HK_Data.TMP36;
 
 with Ada.Text_IO;             use Ada.Text_IO;
 with Ada.Calendar;            use Ada.Calendar;
@@ -56,10 +55,10 @@ package body TTC_Data.Strings is
      new Mod_Format (Sensor_Reading, Sensor_Reading_IO.Put);
 
    package Temperature_Range_IO is
-      new Float_IO (Temperature_Range);
+     new Float_IO (Temperature_Range);
 
    function Temperature_Range_Format is
-      new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
+     new Flt_Format (Temperature_Range, Temperature_Range_IO.Put);
 
    ---------------------
    -- Image functions --
@@ -93,8 +92,8 @@ package body TTC_Data.Strings is
                TM_String : String :=
                  Image(Clock, "%T") & " TM " &
                  Image(M.Data.Timestamp) &
-                 Image(M.Data.Value) &
-                 Image(Temperature(M.Data.Value));
+                 Image(M.Data.Readings.Temperature) &
+                 Image(Temperature(M.Data.Readings.Temperature));
             begin
                return TM_String;
             end;
@@ -104,16 +103,10 @@ package body TTC_Data.Strings is
                TM_String : Bounded_String;
             begin
                Set_Bounded_String (TM_String, Image(Clock, "%T") &
-                                     " TM " &
-                                     Image(M.Timestamp) &
-                                     " HK log");
-               for i in 1..M.Data_Log'Length loop
-                  Append (TM_String, LF & "             " &
-                            Image (M.Data_Log(i).Timestamp) &
-                            Image (M.Data_Log(i).Value) &
-                            Image(Temperature(M.Data_Log(i).Value))
-                           );
-               end loop;
+                                     " >HK" &
+                                     Image(M.Data.Timestamp) &
+                                     Image(M.Data.Readings.Temperature) &
+                                     Image(Temperature(M.Data.Readings.Temperature)));
                return To_String (TM_String);
             end;
 

@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -45,10 +45,15 @@ package Serial_Ports is
 
    type Serial_Port (Device : not null access Peripheral_Descriptor) is
      new Ada.Streams.Root_Stream_Type with record
-      Timeout : Time_Span := Time_Span_Last;
+         Initialized : Boolean := False;
+         Timeout     : Time_Span := Time_Span_Last;
+      --Timeout : Time_Span := Milliseconds(1500); --Time_Span_Last;--
    end record;
 
-   procedure Initialize (This : in out Serial_Port);
+   procedure Initialize (This : in out Serial_Port)
+     with Post => Initialized (This);
+
+   function Initialized (This : Serial_Port) return Boolean with Inline;
 
    procedure Configure
      (This      : in out Serial_Port;
@@ -56,7 +61,19 @@ package Serial_Ports is
       Parity    : Parities     := No_Parity;
       Data_Bits : Word_Lengths := Word_Length_8;
       End_Bits  : Stop_Bits    := Stopbits_1;
-      Control   : Flow_Control := No_Flow_Control);
+      Control   : Flow_Control := No_Flow_Control)
+     with
+       Pre => Initialized (This);
+
+
+   procedure Set_Read_Timeout
+     (This : in out Serial_Port;
+      Wait : Time_Span := Time_Span_Last);
+   --  Calls to Read (below) can either wait indefinitely or
+   --  be set to return any current values received after a given interval.
+   --  If the default value of Time_Span_Last is taken on a call, the effect is
+   --  essentially to wait forever, i.e., blocking. That is also the effect if
+   --  this routine is never called.
 
    overriding
    procedure Read
@@ -68,6 +85,18 @@ package Serial_Ports is
    procedure Write
      (This   : in out Serial_Port;
       Buffer : Ada.Streams.Stream_Element_Array);
+
+   ------------------------
+   -- Serial definitions --
+   ------------------------
+
+   Peripheral : aliased Peripheral_Descriptor :=
+     (Transceiver    => USART_1'Access,
+      Transceiver_AF => GPIO_AF_USART1_7,
+      Tx_Pin         => PB6,
+      Rx_Pin         => PB7);
+
+   Port : aliased Serial_Port (Peripheral'Access);
 
 
 end Serial_Ports;
