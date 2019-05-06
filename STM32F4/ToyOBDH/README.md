@@ -47,6 +47,10 @@ hosts following the instructinos provided on the [Ada Core Community](https://ww
 
 The software has been tested on an STM32F429Discovery board, with a Ubuntu 18.04 development platform.
 
+## Contributors
+
+- Juan A. de la Puente (UPM)
+- Antonio Ramos-Nieto (UPM)
 
 
 
