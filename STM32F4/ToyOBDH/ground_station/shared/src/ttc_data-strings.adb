@@ -15,9 +15,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Author: Antonio Ramos Nieto (MQTTImage)
--- Modified for MUSE lab by Juan A. de la Puente
-
 -- String images of TTC messages
 
 with HK_Data;                 use HK_Data;

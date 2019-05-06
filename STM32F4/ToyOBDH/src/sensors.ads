@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,10 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Author: Antonio Ramos Nieto
---  Modified for MUSE lab by Juan A. de la Puente
-
---  This package provides an abstraction layer for the sensor device.
+--  This package provides an abstraction layer for the sensor devices.
 
 with HK_Data;  use HK_Data;
 with STM32.ADC; use STM32.ADC;

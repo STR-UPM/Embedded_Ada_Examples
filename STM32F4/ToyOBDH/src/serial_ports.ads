@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -69,8 +69,8 @@ package Serial_Ports is
    procedure Set_Read_Timeout
      (This : in out Serial_Port;
       Wait : Time_Span := Time_Span_Last);
-   --  Stream attributes that call Read (below) can either wait indefinitely or
-   --  can be set to return any current values received after a given interval.
+   --  Calls to Read (below) can either wait indefinitely or
+   --  be set to return any current values received after a given interval.
    --  If the default value of Time_Span_Last is taken on a call, the effect is
    --  essentially to wait forever, i.e., blocking. That is also the effect if
    --  this routine is never called.

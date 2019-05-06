@@ -25,15 +25,8 @@ where you will find detailed instructions about the hardware platform.
 
 ## 3. License
 
-Source files for the embedded system are provided under a 3-clause
-Berkeley Software Distribution (BSD) license. As such, and within
-the conditions required by the license, the files are available both
-for proprietary ("commercial") and non-proprietary use.
-
-For details, see the `LICENSE` file in the root directory.
-
-Source files for the ground station are provided under a GNU General
-Public License (GPL) version 3. See file `COPYING3` in the  `ground_station` directory
+Source files are provided under a GNU General
+Public License (GPL) version 3. See file `COPYING3` 
 for the details.
 
 ## 4. Compiler

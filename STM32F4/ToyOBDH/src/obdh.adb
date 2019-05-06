@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -14,9 +14,6 @@
 -- of the license.                                                          --
 --                                                                          --
 ------------------------------------------------------------------------------
-
---  Partial implementation by Antonio Ramos Nieto
--- Adapted to MUSE lab by Juan A. de la Puente
 
 --  This is the main procedure for the toy_obdh example.
 

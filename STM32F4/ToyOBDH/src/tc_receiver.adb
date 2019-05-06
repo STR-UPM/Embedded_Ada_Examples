@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid      --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid      --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -14,8 +14,6 @@
 -- of the license.                                                          --
 --                                                                          --
 ------------------------------------------------------------------------------
-
--- Author: Antonio Ramos Nieto
 
 with Serial_Ports; use Serial_Ports;
 with Ada.Real_Time; use Ada.Real_Time;
@@ -49,5 +47,4 @@ package body TC_Receiver is
       end loop;
    end TC_Receiver_Task;
 
-   
 end TC_Receiver;

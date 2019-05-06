@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,12 +15,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Author: Antonio Ramos Nieto (Sensors_Output, Sensor_Data)
---  Modified for MUSE lab by Juan A. de la Puente
-
 --  Data types for the housekeeping subsystem
 
-with HAL;            use HAL;
+with HAL; use HAL;
 
 package HK_Data is
 

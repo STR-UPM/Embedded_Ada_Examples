@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -15,15 +15,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  Author: Antonio Ramos Nieto
---  Modified for MUSE lab by Juan A. de la Puente
-
---  Temperature sensor implementation.
-
---  This version is for a TMP36 sensor connected to GPIO pin 5 of
---  the F429 Discovery Board. See the board user manual and the
---  mapping in STM32.ADC.
-
+-- This implementation uses the ADC_1 converter in the STM32 device
 
 package body Sensors is
 
@@ -44,9 +36,9 @@ package body Sensors is
       This.Input_Point := Input_Point;
    end Initialize;
 
-   --------------------
-   -- Get Temperature--
-   --------------------
+   ---------
+   -- Get --
+   ---------
 
    procedure Get (This    : in Sensor;
                   Reading : out Sensor_Reading) is

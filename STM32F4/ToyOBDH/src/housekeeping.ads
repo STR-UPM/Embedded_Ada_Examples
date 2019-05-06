@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---          Copyright (C) 2018, Universidad PolitÃ©cnica de Madrid           --
+--          Copyright (C) 2018, Universidad Politécnica de Madrid           --
 --                                                                          --
 -- This is free software;  you can redistribute it  and/or modify it  under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -27,10 +27,11 @@ package Housekeeping is  -- cyclic
    WCET        : Natural;            -- TBC after WCET analysis
    Start_Delay : Natural    := 1000; -- ms
 
+   Task_Priority: System.Priority := 30;
+
 private
 
    task Housekeeping_Task
-     with Priority => System.Default_Priority;
-   --  replace with DMS priority when available
+     with Priority => Task_Priority;
 
 end Housekeeping;

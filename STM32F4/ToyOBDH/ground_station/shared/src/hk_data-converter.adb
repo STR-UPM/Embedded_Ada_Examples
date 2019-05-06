@@ -14,9 +14,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Author: Antonio Ramos Nieto (Light)
--- Modifed for MUSE lab by Juan A. de la Puente
-
 package body HK_Data.Converter is
 
    V_Ref       : constant := 2.930; -- V (measured value)

@@ -14,9 +14,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Partial implementation by Antonio Ramos Nieto
--- Adapted to MUSE lab by Juan A. de la Puente
-
 -- Telemetry reception subsystem
 
 with HK_Data;          use HK_Data;

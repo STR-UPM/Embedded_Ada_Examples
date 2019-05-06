@@ -14,9 +14,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Partial implementation by Antonio Ramos Nieto
--- Adapted to MUSE lab by Juan A. de la Puente
-
 -- Implementation of TTC subsystem
 -- TTC messages are exchanged as streams on a serial interface
 

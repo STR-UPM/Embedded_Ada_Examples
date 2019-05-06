@@ -15,9 +15,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- Author: Antonio Ramos Nieto (Sensors_Output, Sensor_Data)
--- Modified for MUSE lab by Juan A. de la Puente
-
 -- Data types for housekeeping data (ground station)
 
 with Interfaces;
