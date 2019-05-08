@@ -1,5 +1,6 @@
 with "../../drivers/boards/stm32f429_discovery/stm32f429_discovery_full.gpr";
 
+
 project Temperature_STM32F429DISCO is
 
    type Build_Modes is
