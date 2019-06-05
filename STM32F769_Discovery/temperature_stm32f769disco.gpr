@@ -9,7 +9,8 @@ project Temperature_STM32F769DISCO is
 
    for Runtime ("Ada") use STM32F769_Discovery_Full'Runtime("Ada");
    for Target use "arm-eabi";
-   for Main use ("read_temperature.adb");
+   for Main use ("read_temperature.adb", "test.adb");
+
    for Languages use ("Ada");
    for Create_Missing_Dirs use "True";
    for Source_Dirs use ("src/**");
