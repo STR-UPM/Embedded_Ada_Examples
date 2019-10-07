@@ -1,0 +1,24 @@
+with "../drivers/boards/stm32f407_discovery/stm32f407_discovery_full.gpr";
+
+project OBDH_STM32F407DISCO 
+ extends "../shared/common/common.gpr" 
+is
+
+   for Languages use ("Ada");
+
+   for Main use ("obdh.adb");
+
+   for Source_Dirs use ("../shared/ToyOBDH/src/**");
+   for Object_Dir use "../shared/ToyOBDH/obj/stm32f407disco";
+
+   for Runtime ("Ada") use STM32F407_Discovery_Full'Runtime("Ada");
+
+   for Create_Missing_Dirs use "True";
+   
+   package Builder is
+      for Global_Configuration_Pragmas use "../shared/ToyOBDH/gnat.adc";
+   end Builder;
+
+  package Compiler renames STM32F407_Discovery_Full.Compiler;
+
+end OBDH_STM32F407DISCO;

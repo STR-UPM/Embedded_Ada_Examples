@@ -1,0 +1,16 @@
+*.db
+*.ali
+*.o
+*.a
+*.bin
+*.xml
+*.cgpr
+*.bexch
+*.lexch
+*.ci
+*.cswi
+*.stderr
+*.stdout
+*~
+*bak
+obsw
