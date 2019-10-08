@@ -18,13 +18,8 @@
 
 with Housekeeping.Data; use Housekeeping.Data;
 
-with HAL; use HAL;
-
 package Storage is -- protected
    
-   T : UInt16;
-   V : UInt16;
---  
    Capacity : constant Positive := 5;
 
    procedure Put  (Data : in  State);
