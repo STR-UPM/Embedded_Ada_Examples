@@ -14,6 +14,8 @@ This repository contains examples of software for embedded systems written in Ad
 
 * **Toy OBDH** - Tiny mockup of a satellite On-Board Data Handling System. The software reads an external sensor and sends telemetry messages to a simulated ground station running on a laptop computer.
 
+* **OBSW** - A somewhat more realistic mockup of a satellite On-Board Software System. The software reads some platform sensors and sends telemetry messages to a radio device by means of a serial line.
+
 See the specific folders to find examples for different target platforms.
 
 # 2. Environment
